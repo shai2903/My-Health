@@ -96,7 +96,7 @@ class WelcomePage(tk.Frame):
         ttk.Label(self.signup_frame, text="Mail :").grid(row=5, column=3)
         signup_mail_entry = ttk.Entry(self.signup_frame, width=30)
         signup_mail_entry.grid(row=5, column=4, padx=15, pady=5)
-
+       
         ttk.Label(self.signup_frame, text="Birthday :").grid(row=6, column=3)
         signup_date_entry = ttkbootstrap.DateEntry(self.signup_frame, width=20)
         signup_date_entry.grid(row=6, column=4, padx=15, pady=5)
