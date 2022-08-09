@@ -1,0 +1,12 @@
+{
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": false,
+    "cSpell.words": [
+        "dataframe",
+        "Dihydrophylloquinone",
+        "Folate",
+        "Folid",
+        "Pantothenic",
+        "Zink"
+    ]
+}

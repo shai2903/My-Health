@@ -1,0 +1,107 @@
+ 
+    self.input_lunch_frame=ttk.Frame(self.input_frame,width=200, height=200)
+        self.input_lunch_frame.grid( row=3,column=1)
+        lunch_label=ttk.Label(self.input_lunch_frame,text="lunch").grid(row=0,column=1)
+        self.input_lunch_frame.grid_propagate(False)
+
+        self.input_dinner_frame=ttk.Frame(self.input_frame,width=200, height=200)
+        self.input_dinner_frame.grid(row=4,column=1 )
+        dinner_label=ttk.Label(self.input_dinner_frame,text="dinner").grid(row=0,column=1)
+        self.input_dinner_frame.grid_propagate(False)
+
+        self.input_snucks_frame=ttk.Frame(self.input_frame,width=200, height=200)
+        self.input_snucks_frame.grid(row=5,column=1 )
+        dinner_snucks=ttk.Label(self.input_snucks_frame,text="snucks").grid(row=0,column=1)
+        self.input_snucks_frame.grid_propagate(False)
+
+  """
+        self.input_breakfest_frame=ttk.Frame(self.input_frame,width=200, height=200)
+
+        self.input_breakfest_frame.grid(row=2,column=1)
+        
+        breakfast_label=ttk.Label(self.input_breakfest_frame,text="breakfest").grid(row=0,column=1)
+        scrollbar = tk.Scrollbar(self.input_breakfest_frame)
+        scrollbar.grid(sticky='NS')
+        
+        self.list_breakfast = tk.Listbox(self.input_breakfest_frame , yscrollcommand = scrollbar.set)
+        self.list_breakfast.grid(row=1,column=1)
+       
+        self.input_breakfest_frame.grid_propagate(False)
+
+        """
+
+             """if str(meal) == "breakfast":
+            self.listbox_breakfast.insert(len(self.lst_breakfast),self.input_entry.get())
+
+            self.lst_breakfast+=self.input_entry.get()
+           
+            #my_label_breakfast=ttk.Label(self.input_breakfest_frame,text=self.input_entry.get()).grid(row=len(self.lst_breakfast),column=0)
+        if str(meal) == "lunch":
+            self.lst_lunch+=str(meal)
+            my_label_lunch=ttk.Label(self.input_dinner_frame,text=self.input_entry.get()).grid(row=len(self.lst_lunch),column=0)
+
+        if str(meal) == "dinner":
+            self.lst_dinner+=str(meal)
+            my_label_dinner=ttk.Label(self.input_dinner_frame,text=self.input_entry.get()).grid(row=len(self.lst_dinner),column=0)
+
+        if str(meal) == "snucks":
+            self.lst_snucks+=str(meal)
+            my_label_snucks=ttk.Label(self.input_snucks_frame,text=self.input_entry.get()).grid(row=len(self.lst_snucks),column=0)
+        """
+
+        
+        """vitamin_A_label=ttk.Label(frame,text="Vitamin A: ").grid(row=0,column=1)
+        c=ttk.Label(frame,text="0")
+        self.vitamin_A_data=ttk.Label(frame,text="0")
+        self.vitamin_A_data.grid(row=0,column=2)
+        vitamin_C_label=ttk.Label(frame,text="Vitamin C: ").grid(row=1,column=1)
+        self.vitamin_C_data=ttk.Label(frame,text="0")
+        self.vitamin_C_data.grid(row=1,column=2)
+        vitamin_D_label=ttk.Label(frame,text="Vitamin D: ").grid(row=2,column=1)
+        self.vitamin_D_data=ttk.Label(frame,text="0")
+        self.vitamin_D_data.grid(row=2,column=2)
+
+        vitamin_E_label=ttk.Label(frame,text="Vitamin E: ").grid(row=3,column=1)
+        self.vitamin_E_data=ttk.Label(frame,text="0")
+        self.vitamin_E_data.grid(row=3,column=2)"""
+
+          """
+        print(self.vitamin_A_data['text'])
+        text = int(self.vitamin_A_data['text'])
+        self.vitamin_A_data.config(text=text+dct['Vitamin A, IU'])
+        text = int(self.vitamin_C_data['text'])
+        self.vitamin_C_data.config(text=text+dct['Vitamin C, total ascorbic acid'])
+        text = int(self.vitamin_D_data['text'])
+        self.vitamin_D_data.config(text=text+dct['Vitamin D (D2 + D3), International Units'])
+        text = int(self.vitamin_E_data['text'])
+        self.vitamin_E_data.config(text=text+dct['Vitamin E (alpha-tocopherol)'])"""
+ """df=None
+    if "Vitamin_A" in  vitamin:
+        df=vitamin_A
+    if "Vitamin_C" in  vitamin:
+        df=vitamin_A
+    if "Vitamin_D" in  vitamin:
+        df=vitamin_D
+    if "Vitamin_E" in  vitamin:
+        df=vitamin_E
+    if "Vitamin_K" in  vitamin:
+        df=vitamin_K  
+    if "Thiamin" in  vitamin:
+        df=Thiamin  
+    if "Vitamin_B12" in  vitamin:
+        df=vitamin_B12  
+    if "Riboflavin" in  vitamin:
+        df=Riboflavin 
+    if "Folate" in  vitamin:
+        df=Folate 
+    if "Choline" in  vitamin:
+        df=Choline 
+    if "Thiamin" in  vitamin:
+        df=Thiamin 
+    if "Pantothenic " in  vitamin:
+        df=pantothenic 
+    if "Niacin " in  vitamin:
+        df=Niacin 
+    if df is not None:
+        return get_amount_vitamin(age,gender,df)"""
+
