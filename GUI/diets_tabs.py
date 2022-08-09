@@ -2,6 +2,7 @@ import tkinter.ttk as ttk
 from tkinter import ANCHOR, END
 import tkinter as tk
 import ttkbootstrap
+from  ttkbootstrap.tableview import Tableview
 from current_user import CurrentUser
 from vitamin_data import VitaminNameData
 from USDA_handler import *
@@ -62,7 +63,7 @@ class DietsTab():
                 VitaminNameData.vitamin_name[vitamin_count], vitamin_count+1, consumption_frame, is_edit, chosen_diet)
 
     def create_meals_frame(self, new_diet_frame: ttk.Frame, is_edit: bool, chosen_diet: str):
-        """create the meals frame (i.e the listbox with the chosen food for each meal)
+        """create the meals frame (i.e the tableview with the chosen food for each meal)
         Args:
             new_diet_frame - the frame of the Add_new_edit tab
             is_edit - true if in edit mode
@@ -73,11 +74,10 @@ class DietsTab():
         meals_frame.grid_propagate(False)
 
         for i in range(len(lst_of_meals)):
-            self.create_meal_listbox(
+            self.create_meal_tableview(
                 lst_of_meals[i], i, meals_frame, is_edit, chosen_diet)
 
-        del_button = ttk.Button(meals_frame, text="Delete", command=lambda: delete.delete_item_from_list_box(self, self.listbox_Lunch.get(
-            ANCHOR), self.listbox_Breakfast.get(ANCHOR), self.listbox_Snacks.get(ANCHOR), self.listbox_Dinner.get(ANCHOR)))
+        del_button = ttk.Button(meals_frame, text="Delete", command=lambda: delete.delete_item_from_list_box(self, self.tableview_Lunch.view.selection(), self.tableview_Breakfast.view.selection(), self.tableview_Snacks.view.selection(), self.tableview_Dinner.view.selection()))
         del_button.grid(row=4, column=2, sticky='n')
 
     def create_search_frame(self, new_diet_frame: ttk.Frame, is_edit: bool, chosen_diet: str):
@@ -207,8 +207,10 @@ class DietsTab():
             dict_consumption = dict.fromkeys(VitaminNameData.vitamin_name, 0)
         update.set_consumption_widgets(self, dict_consumption)
 
-    def create_meal_listbox(self, meal: str, grid_row_start: int, meals_frame: ttk.LabelFrame, is_edit: bool, chosen_diet: str):
-        """create the frame and listbox of meal data in add_new_frame and edit-diets, if in edit mode set all the foods from chosen_diet otherwise it's empty
+   
+
+    def create_meal_tableview(self, meal: str, grid_row_start: int, meals_frame: ttk.LabelFrame, is_edit: bool, chosen_diet: str):
+        """create the frame and tableview of meal data in add_new_frame and edit-diets, if in edit mode set all the foods from chosen_diet otherwise it's empty
         Args:
             meal - current meal
             grid_row_start - the first row of this meal frame
@@ -217,28 +219,40 @@ class DietsTab():
             chosen_diet - the current diet (passed only if is_edit=True)
         """
 
-        current_meal_frame = ttk.Frame(meals_frame, width=350, height=200)
-        current_meal_frame.grid(row=grid_row_start, column=2, pady=7, padx=25)
+        current_meal_frame = ttk.Frame(meals_frame, width=400, height=200)
+        current_meal_frame.grid(row=grid_row_start, column=2, pady=7, padx=10)
+
         ttk.Label(current_meal_frame, text=meal).grid(
             row=grid_row_start, column=2)
 
-        scrollbar_meal = tk.Scrollbar(current_meal_frame)
-        scrollbar_meal.grid(sticky='NS')
+        coldata = [
+        {"text": "Name", "width": 250},
+        {"text": "Serving", "width": 70},
+        {"text": "Amount", "width": 70},
+        ]
 
-        setattr(self, "listbox_"+meal, tk.Listbox(current_meal_frame,
-                width=50, yscrollcommand=scrollbar_meal.set))
+        setattr(self, "tableview_"+meal,  Tableview(
+            master=current_meal_frame,
+            coldata=coldata,
+            
+            paginated=True,
+            height=5,
+           
+         ))
 
-        current_meal_listbox = getattr(self, "listbox_"+meal)
-        current_meal_listbox.grid(row=1+grid_row_start, column=2, sticky='e')
+        current_meal_tableview = getattr(self, "tableview_"+meal)
+        current_meal_tableview.grid(row=1+grid_row_start, column=2, sticky='e')
         current_meal_frame.grid_propagate(False)
+        #current_meal_tableview.view['show'] = ('headings', 'tree')
 
         if is_edit:  # in edit mode add all foods from chosen_diet to current_meal_listbox
             foods_in_diet_meal = self.current_user.get_foods_from_meal_diet(
                 chosen_diet, meal)
 
             for food in foods_in_diet_meal:
-                current_meal_listbox.insert(
-                    END, food.name+" | "+food.serving+" | amount: "+food.amount)
+                current_meal_tableview.insert_row(
+                    'end', [food.name,food.serving,food.amount])
+        current_meal_tableview.load_table_data()
 
     def create_consumption_label(self, vitamin: str, row_count: int, consumption_frame: ttk.Frame, is_edit: bool, chosen_diet: str):
         """set labels of vitamin consumption to 0 ot the saved value

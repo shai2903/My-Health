@@ -11,7 +11,7 @@ class StartApp(tk.Tk):
 
     def __init__(self):
         tk.Tk.__init__(self)
-         
+       
         container = tk.Frame(self)
         self.title("Check your Vitamins")
         self.iconbitmap("additional_files\Icon.ico")  # set the icon of window
@@ -44,6 +44,8 @@ class StartApp(tk.Tk):
         self.resizable(0, 0)  # can't resize window
         frame = self.frames[welcome_page.WelcomePage]
         frame.tkraise()
+
+        
 
     def show_tab_creator(self):
         """show the frame of TabPage"""

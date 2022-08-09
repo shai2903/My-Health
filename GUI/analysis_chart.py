@@ -125,5 +125,5 @@ def show_meal_analysis(meal: str, vitamin: str, chosen_diet: str, diet_tab: diet
 
         meal_datatable.insert_row('end', [
                                   food.name, food.amount, food.serving, consumption_food_str, proportional_str])
-
+    meal_datatable.load_table_data()    
     meal_datatable.grid()

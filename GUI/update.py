@@ -8,7 +8,7 @@ import diets_tabs
 
 
 def add_food(diet_tab: diets_tabs.DietsTab, meal: str, food: str, serving: str, amount: str):
-    """add chosen food to Meal object and to listbox
+    """add chosen food to Meal object and to tableview
     Args:
         diet_tab - diets_tabs object from GUI
         meal - the meal the user choose
@@ -19,10 +19,12 @@ def add_food(diet_tab: diets_tabs.DietsTab, meal: str, food: str, serving: str, 
     food_id = diet_tab.from_description_to_fcdif[food]
     current_food_nutrient = get_food_nutrient(str(food_id))
 
-    num_of_foods = diet_tab.current_user.get_num_of_foods_from(meal)
-    current_meal_listbox = getattr(diet_tab, "listbox_"+meal)
-    current_meal_listbox.insert(
-        num_of_foods, food+" | "+serving+" | amount: "+amount)
+    #num_of_foods = diet_tab.current_user.get_num_of_foods_from(meal)
+    current_meal_tableview = getattr(diet_tab, "tableview_"+meal)
+    current_meal_tableview.insert_row(
+                    'end', [food,serving,amount])
+    current_meal_tableview.load_table_data()
+    #current_meal_tableview.view['show'] = ('headings', 'tree')    
 
     vitamin_intake = calculate_consumption(diet_tab, current_food_nutrient,
                                            serving, amount, False)
