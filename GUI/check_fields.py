@@ -1,10 +1,11 @@
+import sys
+import os
+sys.path.append(os.path.abspath('../diet proj'))
 import error
 import handle_db
 import helper
 from datetime import datetime
-import sys
-import os
-sys.path.append(os.path.abspath('../diet proj'))
+
 
 
 def check_user(username: str, password: str):
@@ -99,3 +100,10 @@ def check_changed_password(new_password: str, old_password: str, repeat_password
 
     if new_password != repeat_password:
         raise error.ValidationError("Repeated password doesn't match password")
+        
+def check_diet_name(diet_name: str,all_diets_name: list):
+    if helper.is_empty(diet_name):
+        raise error.ValidationError("Enter a diet name")
+
+    if diet_name in all_diets_name:
+        raise error.ValidationError("Enter unique diet name")

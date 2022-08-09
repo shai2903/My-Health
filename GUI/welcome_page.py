@@ -64,7 +64,7 @@ class WelcomePage(tk.Frame):
         try:
             check_fields.check_user(username, password)
             self.user = handle_db.search_user_collection(username, password)
-
+    
         except error.ValidationError as exception:
             self.label_error(self.login_frame, 5, 2, str(exception))
             return

@@ -11,7 +11,7 @@ class StartApp(tk.Tk):
 
     def __init__(self):
         tk.Tk.__init__(self)
-        print("hey")
+         
         container = tk.Frame(self)
         self.title("Check your Vitamins")
         self.iconbitmap("additional_files\Icon.ico")  # set the icon of window

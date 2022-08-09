@@ -80,7 +80,11 @@ def update_password(user_collection: dict,new_password: str):
 def update_diets(user_collection: dict,diet_name: str,is_edit: bool,current_diet: Diet):
     """add diet to saved diets in collection (in edit mode we don't increase the counter of diets 
     because we changed an existing diet"""
+    print("hey 2")
+    print(current_diet.vitamins)
     json_diet = helper.to_dict(current_diet)
+    print(current_diet.vitamins)
+    print(json_diet)
     collection.update_many({"_id": user_collection["_id"]}, {
                               "$set": {"diets."+diet_name: json_diet}})
     

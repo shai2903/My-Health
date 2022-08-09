@@ -128,18 +128,22 @@ class DietsTab():
         ttk.Button(search_frame, text="Add food", command=lambda: update.add_food(self, self.meal_combobox.get(), self.food_options_combobox.get(
         ), self.serving_combobox.get(), self.amount_entry.get())).grid(row=9, column=1, pady=5, sticky="s")
 
-        done_new_diet = ttk.Labelframe(new_diet_frame)
-        done_new_diet.grid(row=0, column=0, padx=10)
-        ttk.Label(done_new_diet, text="Diet name: ").grid(row=0, column=0)
+        self.done_new_diet = ttk.Labelframe(new_diet_frame)
+        self.done_new_diet.grid(row=0, column=0, padx=10)
+        ttk.Label(self.done_new_diet, text="Diet name: ").grid(row=0, column=0)
 
-        self.diet_name_entry = ttk.Entry(done_new_diet, width=30)
+        self.diet_name_entry = ttk.Entry(self.done_new_diet, width=30)
         self.diet_name_entry.insert(END, chosen_diet)
         self.diet_name_entry.grid(row=0, column=1, pady=5, padx=10)
+
+        error_label=ttk.Label(self.done_new_diet, text="")
+        error_label.grid(row=2, column=1)
+
         if not is_edit:
-            ttk.Button(done_new_diet, text="Add new diet", command=lambda: add_diet.add_new_diet(self
+            ttk.Button(self.done_new_diet, text="Add new diet", command=lambda: add_diet.add_new_diet(self,error_label
                                                                                                  )).grid(row=1, column=1, pady=5, sticky="s")
         else:
-            ttk.Button(done_new_diet, text="Done", command=lambda: self.back_to_diets(
+            ttk.Button(self.done_new_diet, text="Done", command=lambda: self.back_to_diets(
                 new_diet_frame, False)).grid(row=1, column=1, pady=5, sticky="s")
 
     def create_optimal_frame(self, vitamin_frame: ttk.LabelFrame):
@@ -302,8 +306,9 @@ class DietsTab():
             all_diet_frame - the current frame 
         """
         reset_fields.reset_frame(all_diet_frame)
-
-        self.current_diet = self.current_user.get_diet(chosen_diet)
+        
+        self.current_user.current_diet = self.current_user.user.diets[chosen_diet]
+    
 
         self.create_search_frame(all_diet_frame, True, chosen_diet)
         self.create_meals_frame(all_diet_frame, True, chosen_diet)
@@ -316,7 +321,7 @@ class DietsTab():
             new_diet_frame - the current frame
             is_analysis - true if we go back from analysis frame
         """
-
+     
         if not is_analysis:
             add_diet.add_diet_to_diets(self, True)
 

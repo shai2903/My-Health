@@ -121,7 +121,7 @@ def show_meal_analysis(meal: str, vitamin: str, chosen_diet: str, diet_tab: diet
         consumption_user = diet_tab.current_user.user.get_diet(
             chosen_diet).get_vitamins()[vitamin]
         proportional_str = str(
-            round((float(consumption_food/consumption_user))*100, 2))+"%"
+            round((float(consumption_food/consumption_user))*100, 2))+" %"
 
         meal_datatable.insert_row('end', [
                                   food.name, food.amount, food.serving, consumption_food_str, proportional_str])

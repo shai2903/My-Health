@@ -21,7 +21,7 @@ class TabPage(tk.Frame):
         self.parent_frame = parent_frame
 
         self.current_user = CurrentUser(welcome_obj.user)
-
+            
         self.create_tabs()
 
     def create_tabs(self):
