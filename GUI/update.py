@@ -1,9 +1,7 @@
-
-
 from __future__ import annotations
 from USDA_handler import *
 import reset_fields
-import re
+import helper
 import diets_tabs
 
 
@@ -19,28 +17,24 @@ def add_food(diet_tab: diets_tabs.DietsTab, meal: str, food: str, serving: str, 
     food_id = diet_tab.from_description_to_fcdif[food]
     current_food_nutrient = get_food_nutrient(str(food_id))
 
-    #num_of_foods = diet_tab.current_user.get_num_of_foods_from(meal)
     current_meal_tableview = getattr(diet_tab, "tableview_"+meal)
     current_meal_tableview.insert_row(
-                    'end', [food,serving,amount])
+        'end', [food, serving, amount])
     current_meal_tableview.load_table_data()
-    #current_meal_tableview.view['show'] = ('headings', 'tree')    
 
     vitamin_intake = calculate_consumption(diet_tab, current_food_nutrient,
                                            serving, amount, False)
     set_consumption_widgets(diet_tab, vitamin_intake)
 
     diet_tab.current_user.update_meal(
-        meal, food_id, food, serving, amount, current_food_nutrient, vitamin_intake)
+        meal, food_id, food, serving, amount, current_food_nutrient)
 
     reset_fields.reset_search_frame(diet_tab, True)
 
 
-def calculate_consumption(diet_tab: diets_tabs.DietsTab, current_food_nutrient: dict, sreving: str, amount: str, is_delete: bool):
+def calculate_consumption(diet_tab: diets_tabs.DietsTab, current_food_nutrient: dict, sreving: str, amount: str, is_delete: bool) -> dict:
     """calculate the consumption of user after adding\deleting food """
-    sreving_in_grams = float(re.findall("\(\d*\.\d*\s[g][gr]\)", sreving)[0].split(
-        "(")[1].split(' ')[0])  # get serving in grams (example: 1 cup is x gram)
-    ratio = sreving_in_grams/100
+    ratio = helper.get_ratio(sreving)
     vitamin_intake = diet_tab.current_user.get_current_diet_vitamins()
 
     # update all vitamin's progressbar , label and current_meal dict
@@ -54,7 +48,7 @@ def calculate_consumption(diet_tab: diets_tabs.DietsTab, current_food_nutrient: 
     return vitamin_intake
 
 
-def set_consumption_widgets(diet_tab: diets_tabs.DietsTab, consumption_dict):
+def set_consumption_widgets(diet_tab: diets_tabs.DietsTab, consumption_dict: dict):
     """set all widget with update consumption_dict values """
     # update all vitamin's progressbar , label and current_meal dict
     for vitamin, consumption_value in consumption_dict.items():

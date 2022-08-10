@@ -8,6 +8,7 @@ import handle_db
 from user import User
 import start_app
 import helper
+import mail_handler
 
 
 class WelcomePage(tk.Frame):
@@ -16,7 +17,7 @@ class WelcomePage(tk.Frame):
 
     Attributes:
         parent_frame - the parent frame of this app
-        start_app - the start_app object of this GUI
+        controller - the start_app object of this GUI
     """
 
     def __init__(self, parent_frame: tk.Frame, controller: start_app):
@@ -33,13 +34,64 @@ class WelcomePage(tk.Frame):
         # create the login frame and the sign-up frame
         self.create_login_frame()
         self.create_signup_frame()
+        self.create_forgot_password_frame()
+
+    def create_forgot_password_frame(self):
+        """create the forgor password frame"""
+
+        self.forgot_password_frame = ttk.Labelframe(self, width=300)
+        self.forgot_password_frame.grid(row=1, column=1, padx=10, sticky='s')
+        ttk.Label(self.forgot_password_frame, text="Forgot password", style="login.TLabel").grid(
+            row=1, column=1)
+
+        ttk.Label(self.forgot_password_frame, text="Username : ").grid(
+            row=2, column=1, padx=5)
+        username_entry = ttk.Entry(self.forgot_password_frame, width=30)
+        username_entry.grid(row=2, column=2, padx=15, pady=5)
+
+        ttk.Label(self.forgot_password_frame, text="Mail : ").grid(
+            row=3, column=1, padx=5)
+        mail_entry = ttk.Entry(self.forgot_password_frame, width=30)
+        mail_entry.grid(row=3, column=2, padx=15, pady=5)
+
+        error_label = ttk.Label(
+            self.forgot_password_frame, text="", style="error.login.TLabel")
+        error_label.grid(row=4, column=2, padx=5)
+
+        ttk.Button(self.forgot_password_frame, command=lambda: self.send_reset_password(
+            mail_entry.get(), username_entry.get(), error_label), text="Ok").grid(row=4, column=1, pady=10)
+
+    def send_reset_password(self, mail: str, username: str, label: tk.Label):
+        """create the frame of 'forgot password'"""
+        if not handle_db.is_username_exists(username):
+            label['text'] = "Username doesn't exist"
+            return
+
+        try:
+            check_fields.check_mail_user(username, mail)
+        except error.ValidationError as exception:
+
+            label['text'] = str(exception)
+            return
+
+        try:
+            password = mail_handler.send_mail_reset(mail, username)
+            hashed_new_password = helper.make_hashed_password(password)
+            handle_db.update_password(
+                handle_db.get_user(username), hashed_new_password)
+
+        except Exception as exception:
+            label['text'] = "couldn't send mail"
+            return
+
+        label['text'] = "New password sent to your mail"
 
     def create_login_frame(self):
         """create the login frame"""
-        ttk.Label(self, text="Login", style="login.TLabel").grid(
-            row=1, column=1, pady=5)
-        self.login_frame = ttk.Labelframe(self, width=300, height=200)
-        self.login_frame.grid(row=1, column=1, padx=10)
+
+        self.login_frame = ttk.Labelframe(self, width=300)
+        self.login_frame.grid(row=1, column=1, padx=10, sticky='n')
+
         ttk.Label(self.login_frame, text="Login", style="login.TLabel").grid(
             row=1, column=1, pady=5)
 
@@ -62,9 +114,9 @@ class WelcomePage(tk.Frame):
             password - the password the user enter
         """
         try:
-            check_fields.check_user(username, password)
+            check_fields.check_empty_fields(username, password)
             self.user = handle_db.search_user_collection(username, password)
-    
+
         except error.ValidationError as exception:
             self.label_error(self.login_frame, 5, 2, str(exception))
             return
@@ -77,7 +129,7 @@ class WelcomePage(tk.Frame):
         self.signup_frame = ttk.Labelframe(self, width=300, height=200)
         self.signup_frame.grid(row=1, column=3)
         ttk.Label(self.signup_frame, text="Sign up ").grid(
-            row=1, column=3, pady=5)
+            row=1, column=3, pady=20)
 
         ttk.Label(self.signup_frame, text="User name :").grid(row=2, column=3)
         signup_username_entry = ttk.Entry(self.signup_frame, width=20)
@@ -96,7 +148,7 @@ class WelcomePage(tk.Frame):
         ttk.Label(self.signup_frame, text="Mail :").grid(row=5, column=3)
         signup_mail_entry = ttk.Entry(self.signup_frame, width=30)
         signup_mail_entry.grid(row=5, column=4, padx=15, pady=5)
-       
+
         ttk.Label(self.signup_frame, text="Birthday :").grid(row=6, column=3)
         signup_date_entry = ttkbootstrap.DateEntry(self.signup_frame, width=20)
         signup_date_entry.grid(row=6, column=4, padx=15, pady=5)
@@ -109,7 +161,7 @@ class WelcomePage(tk.Frame):
         gender_combobox.grid(row=7, column=4)
 
         ttk.Button(self.signup_frame, text="Ok", command=lambda: self.from_signup_to_tab_creator(signup_username_entry.get(), signup_pass_entry.get(
-        ), signup_rep_password_entry.get(), signup_mail_entry.get(), signup_date_entry.entry.get(), gender_combobox.get())).grid(row=8, column=4, pady=10)
+        ), signup_rep_password_entry.get(), signup_mail_entry.get(), signup_date_entry.entry.get(), gender_combobox.get())).grid(row=8, column=4, pady=25)
 
     def from_signup_to_tab_creator(self, username: str, password: str, rep_password: str, mail: str, birthday: str, gender: str):
         """from signup to tab_creator, adding the new user data to collection and create a local user
@@ -121,7 +173,6 @@ class WelcomePage(tk.Frame):
             birthday - the birthday the user enter
             gender - the gender the user enter
         """
-
         try:
             self.validation_details_signup(
                 username, password, rep_password, mail, gender, birthday)

@@ -17,6 +17,7 @@ class CurrentUser:
     custom_recommended_values - the user optimal values for all vitamin 
     current_diet - diet object of the current diet the user edit now
     user_collection - user data from collection
+    age - the age of user (calculated from his birthday)
     """
 
     def __init__(self, user: User):
@@ -28,7 +29,7 @@ class CurrentUser:
         self.current_diet = self.reset_diet()
         self.user_collection = handle_db.get_user(self.user.username)
 
-    def reset_diet(self):
+    def reset_diet(self) -> Diet:
         """create new diet object and return it"""
         self.Breakfast_foods: Meal = Meal()
         self.Dinner_foods: Meal = Meal()
@@ -38,27 +39,31 @@ class CurrentUser:
         lst_of_meals = ["Breakfast", "Lunch", "Dinner", "Snacks"]
         for meal in lst_of_meals:
             meals_dct[meal] = getattr(self, meal+"_foods")
-
         return Diet(meals_dct, False)
 
     def get_name(self) -> str:
         """get the name of user"""
         return self.user.username
 
+    def get_mail(self) -> str:
+        """get the mail of user"""
+        return self.user.mail
+
     def get_diets_name(self):
         """return the names of all the diets"""
         return self.user.diets.keys()
 
-    def get_vitamin_value(self, chosen_diet: str, meal: str, vitamin: str):
-        return self.user.diets[chosen_diet].meals[meal].vitamins[vitamin]
+    def get_vitamin_value_from_meal(self, chosen_diet: str, meal: str, vitamin: str):
+        """get vitamin intake value from meal in chosen_diet"""
+        return self.user.get_vitamin_value_from_meal(chosen_diet, meal, vitamin)
 
     def get_vitamin_value_from_diet(self, chosen_diet: str, vitamin: str) -> float:
         """return the vitamin consumption from chosen_diet"""
-        return self.user.diets[chosen_diet].vitamins[vitamin]
+        return self.user.get_vitamin_value_from_diet(chosen_diet, vitamin)
 
     def get_all_vitamin_values_from_diet(self, chosen_diet: Str) -> dict:
-        """return the vitamin consumption from chosen_diet"""
-        return self.user.diets[chosen_diet].vitamins
+        """return all vitamins consumption from chosen_diet"""
+        return self.user.get_all_vitamin_values_from_diet(chosen_diet)
 
     def get_diet(self, diet_name: str) -> Diet:
         """return diet object of diet_name"""
@@ -74,12 +79,17 @@ class CurrentUser:
         handle_db.update_username(self.user_collection, new_username)
         self.user.set_username(new_username)
 
+    def update_mail(self, new_mail: str):
+        """update mail"""
+        handle_db.update_mail(self.user_collection, new_mail)
+        self.user.set_mail(new_mail)
+
     def get_password(self) -> str:
         """return user's password"""
         return self.user.get_password()
 
     def update_password(self, new_password: str):
-        """update password"""
+        """update password to new_password"""
         hashed_new_password = helper.make_hashed_password(new_password)
         self.user.set_password(hashed_new_password)
         handle_db.update_password(self.user_collection, hashed_new_password)
@@ -91,26 +101,35 @@ class CurrentUser:
                                diet_name, is_edit, current_diet)
 
     def get_number_from_recommended(self, vitamin: str) -> float:
+        """return the optimal amount of vitamin"""
         return float(re.findall("[-+]?(?:\d*\,\d*\.\d+|\d*\.\d+|\d*\,\d+|\d+)", str(
             self.custom_recommended_values[vitamin]))[0].replace(',', ''))
 
     def get_foods_from_meal_diet(self, chosen_diet: str, meal: str) -> list:
-
+        """get list of foods from meal in chosen_diet"""
         return self.user.get_foods_from_meal_diet(
             chosen_diet, meal)
 
-    def update_meal(self, meal: str, food_id: str, food_name: str, serving: str, amount: str, current_food_nutrient: dict, vitamin_intake: str):
+    def update_meal(self, meal: str, food_id: str, food_name: str, serving: str, amount: str, current_food_nutrient: dict):
+        """update meal with new food data"""
         current_meal = self.current_diet.get_meal(meal)
         new_food = Food(food_id, food_name, serving,
                         amount, current_food_nutrient)
 
         current_meal.add_food(new_food)
 
-    def get_num_of_foods_from(self, meal: str) -> int:
-        return self.current_diet.get_meal(meal).num_of_foods
-
     def get_current_diet_vitamins(self) -> dict:
+        """get vitamin intake from current_diet"""
         return self.current_diet.get_vitamins()
 
     def get_current_diet(self) -> Diet:
+        """return current diet object"""
         return self.current_diet
+
+    def get_diets_name(self) -> list:
+        """return list of all diets name"""
+        return self.user.get_diets_name()
+
+    def get_meal(self, meal: str) -> Meal:
+        """return Meal object of meal"""
+        return self.current_diet.get_meal(meal)

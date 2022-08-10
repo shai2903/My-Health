@@ -1,5 +1,6 @@
 from __future__ import annotations
 import welcome_page
+import start_app
 import tkinter as tk
 from current_user import CurrentUser
 import tkinter.ttk as ttk
@@ -9,11 +10,12 @@ from personal_tab import personalTab
 
 class TabPage(tk.Frame):
 
-    def __init__(self, parent_frame: tk.Frame, welcome_obj: welcome_page.WelcomePage, controller):
+    def __init__(self, parent_frame: tk.Frame, welcome_obj: welcome_page.WelcomePage, controller: start_app.StartApp):
         """Class for the user app GUI with all the features to analysis and calculate your vitamin intake daily.
         Args:
-            features - the current frame
+            parent_frame - the current frame
             welcome_obj - the welcome object, we can take the user data from it
+            controller - startapp object
         """
         tk.Frame.__init__(self, parent_frame)
         self.controller = controller
@@ -21,7 +23,7 @@ class TabPage(tk.Frame):
         self.parent_frame = parent_frame
 
         self.current_user = CurrentUser(welcome_obj.user)
-            
+
         self.create_tabs()
 
     def create_tabs(self):

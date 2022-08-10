@@ -1,4 +1,4 @@
-import re
+import helper
 
 
 class Food:
@@ -26,11 +26,18 @@ class Food:
                     setattr(self, key, value)
 
     def calculate_for_serving(self, vitamin):
-        sreving_in_grams = float(re.findall("\(\d*\.\d*\s[g][gr]\)", self.serving)[0].split(
-            "(")[1].split(' ')[0])  # get serving in grams (example: 1 cup is x gram)
-
-        ratio = sreving_in_grams/100
+        """calculte consumption for serving and amount"""
+        ratio = helper.get_ratio(self.serving)
         consumption_food = (
             float(self.vitamins[vitamin]) * ratio)*float(self.amount)
 
         return consumption_food
+
+    def get_vitamins(self):
+        return self.vitamins
+
+    def get_amount(self):
+        return self.amount
+
+    def get_serving(self):
+        return self.serving

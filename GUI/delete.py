@@ -14,10 +14,8 @@ def delete_item_from_list_box(diet_tab: diets_tabs.DietsTab, item_lunch: str, it
         item_breakfast - the item we want to delete from breakfast
         item_snacks - the item we want to delete from snacks
         item_dinner - the item we want to delete from dinner
-        chosen_diet - the diet the user choose in edit mode
     """
-    print(item_lunch)
-    # for meal in lst_of_meals:
+ 
     if item_lunch:
         delete_from_meal(diet_tab, item_lunch, "Lunch")
         return
@@ -33,7 +31,7 @@ def delete_item_from_list_box(diet_tab: diets_tabs.DietsTab, item_lunch: str, it
 
 
 def delete_from_meal(diet_tab: diets_tabs.DietsTab, item_to_del: str, meal: str):
-    """delete an item from specific tableview and the user meal object
+    """delete an item from specific table-view and from user object
     Args:
         diet_tab -the diet tab object of GUI
         item_to_del - the chosen food to delete
@@ -46,12 +44,12 @@ def delete_from_meal(diet_tab: diets_tabs.DietsTab, item_to_del: str, meal: str)
     meal_tableview.load_table_data()
 
     # delete from user object
-    meal_obj: Meal = diet_tab.current_user.current_diet.get_meal(meal)
+    meal_obj: Meal = diet_tab.current_user.get_meal(meal)
     food_obj: Food = meal_obj.delete_food(food_name)
 
     # update vitamin frame
-    vitamin_intake = update.calculate_consumption(diet_tab, food_obj.vitamins,
-                                                  food_obj.serving, food_obj.amount, True)
+    vitamin_intake = update.calculate_consumption(diet_tab, food_obj.get_vitamins(),
+                                                  food_obj.get_serving(), food_obj.get_amount(), True)
     update.set_consumption_widgets(diet_tab, vitamin_intake)
 
 

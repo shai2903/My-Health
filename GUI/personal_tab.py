@@ -22,15 +22,15 @@ class personalTab():
         ttk.Label(personal_change_frame, text="Edit Your Profile").grid(
             row=1, column=1, pady=10, padx=30)
 
-        self.username_change_frame = ttk.Labelframe(
+        mail_change_frame = ttk.Labelframe(
             edit_personal_data_frame, width=100, height=2000)
-        self.username_change_frame.grid(row=2, ipady=10, ipadx=10, sticky='ew')
-        ttk.Label(self.username_change_frame, text="User Name :").grid(
+        mail_change_frame.grid(row=2, ipady=10, ipadx=10, sticky='ew')
+        ttk.Label(mail_change_frame, text="New mail :").grid(
             row=2, column=1, pady=10)
-        username_entry = ttk.Entry(self.username_change_frame, width=15)
-        username_entry.grid(row=2, column=2)
-        ttk.Button(self.username_change_frame, text="Ok", command=lambda: self.change_username(
-            username_entry.get())).grid(row=3, column=2, pady=10)
+        mail_entry = ttk.Entry(mail_change_frame, width=30)
+        mail_entry.grid(row=2, column=2)
+        ttk.Button(mail_change_frame, text="Ok", command=lambda: self.change_mail(mail_change_frame,
+                                                                                  mail_entry.get())).grid(row=3, column=2, pady=10)
 
         password_change_frame = ttk.Labelframe(
             edit_personal_data_frame, width=100, height=2000)
@@ -67,29 +67,29 @@ class personalTab():
             check_fields.check_changed_password(
                 new_password, old_password, repeat_password, self.current_user.get_password())
         except error.ValidationError as exception:
-            self.label_change(str(exception))
+            self.label_change(password_change_frame, str(exception))
             return
 
         self.current_user.update_password(new_password)
-        self.label_change("Password changed")
+        self.label_change(password_change_frame, "Password changed")
 
-    def change_username(self, new_username: str):
-        """change the username 
+    def change_mail(self, mail_frame: ttk.Frame, new_mail: str):
+        """change the mail 
         Args:
-            new_username - the new username the user want
-            username_change_frame - current frame
-        """
-        # check if username already exist for other user
+            new_mail - the new mail the user want
+            mail_frame - current frame"""
+
+        # check if mail already exist for other user
         try:
-            check_fields.check_changed_username(
-                new_username, self.current_user.get_name())
+            check_fields.check_changed_mail(
+                new_mail, self.current_user.get_mail())
         except error.ValidationError as exception:
-            self.label_change(str(exception))
+            self.label_change(mail_frame, str(exception))
             return
 
-        self.current_user.update_username()
-        self.label_change("Username changed")
+        self.current_user.update_mail(new_mail)
+        self.label_change(mail_frame, "Mail changed")
 
-    def label_change(self, label_txt: str):
-        ttk.Label(self.username_change_frame, text=label_txt,
+    def label_change(self, frame: ttk.Frame, label_txt: str):
+        ttk.Label(frame, text=label_txt,
                   style="error.login.TLabel").grid(row=9, column=2, sticky="ew")

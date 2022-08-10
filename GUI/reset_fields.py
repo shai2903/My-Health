@@ -27,9 +27,8 @@ def reset_vitamin_frame(diet_tab: diets_tabs.DietsTab):
 
 
 def reset_meals_frame(diet_tab: diets_tabs.DietsTab):
-
-    lst_of_meals = ["Breakfast", "Lunch", "Dinner", "Snacks"]
     """resert the meal frame after we add new diet to empty values"""
+    lst_of_meals = ["Breakfast", "Lunch", "Dinner", "Snacks"]
     for meal in lst_of_meals:
         getattr(diet_tab, "tableview_"+meal).delete_rows()
         setattr(diet_tab, meal+"_foods", None)

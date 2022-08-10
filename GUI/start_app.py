@@ -11,11 +11,10 @@ class StartApp(tk.Tk):
 
     def __init__(self):
         tk.Tk.__init__(self)
-       
+
         container = tk.Frame(self)
         self.title("Check your Vitamins")
         self.iconbitmap("additional_files\Icon.ico")  # set the icon of window
-
         container.grid()
 
         self.set_style()
@@ -45,8 +44,6 @@ class StartApp(tk.Tk):
         frame = self.frames[welcome_page.WelcomePage]
         frame.tkraise()
 
-        
-
     def show_tab_creator(self):
         """show the frame of TabPage"""
         self.state('zoomed')
@@ -58,6 +55,7 @@ class StartApp(tk.Tk):
         """ switch the frames to frame_name
         Args:
             parent_frame - the parent frame of the new app
+            frame_name - the name of the frame we want to switch
             welcome_obj - need to pass it to TabPage to get access for user data
         """
         if frame_name == "TabCreator":

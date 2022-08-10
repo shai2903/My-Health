@@ -10,7 +10,7 @@ class Diet:
         vitamins - dict with all the vitamins data for all meals in diet     
     """
 
-    def __init__(self, dict_diet: dict, is_dict_json):
+    def __init__(self, dict_diet: dict, is_dict_json: bool):
         """constructor for diet object"""
         if not is_dict_json:
             self.meals: dict = dict_diet
@@ -35,5 +35,13 @@ class Diet:
         return self.meals[meal]
 
     def get_vitamins(self) -> dict:
+        """return vitamin intake"""
         return self.vitamins
 
+    def get_vitamin_value_from_meal(self, meal: str, vitamin: str) -> float:
+        """get the vitamin value from meal"""
+        return self.meals[meal].get_vitamin(vitamin)
+
+    def get_vitamin_value(self, vitamin: str):
+        """return all vitamin value from diet"""
+        return self.vitamins[vitamin]

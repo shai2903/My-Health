@@ -9,7 +9,6 @@ class Meal:
         vitamins - dict of vitamin data of all foods from meal
         list_of_foods - list of foods in meal
         num_of_foods - num of foods in meal
-
     """
 
     def __init__(self, dict_meal: dict = None):
@@ -45,7 +44,7 @@ class Meal:
         """add food to list and update num_of_foods"""
         self.num_of_foods += 1
         self.list_of_foods.append(food)
-        for vitamin in food.vitamins.keys():
+        for vitamin in food.get_vitamins().keys():
             to_add = food.calculate_for_serving(vitamin)
             self.add_to_vitamin(vitamin, to_add)
 
@@ -68,3 +67,6 @@ class Meal:
                 to_add = to_return.calculate_for_serving(vitamin)
                 self.add_to_vitamin(vitamin, (-1)*to_add)
             return to_return
+
+    def get_vitamin(self, vitamin: str) -> float:
+        return self.vitamins[vitamin]

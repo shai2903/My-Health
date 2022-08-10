@@ -5,6 +5,7 @@ from vitamin_data import VitaminNameData
 
 key_from_USDA = "Idd4pw784uoM2XfIhNmIyxsfwKv6xLdUBnIUz99m"
 
+
 def get_all_options_USDA(food_name: str) -> list:
     """ get all the food option from searching food_name in USDA
         Args:
@@ -26,7 +27,7 @@ def get_serving_option(food_id: str) -> list:
     serving = []
 
     for serving_info in api_serving:
-        if 'modifier' in serving_info and 'gramWeight' in serving_info :
+        if 'modifier' in serving_info and 'gramWeight' in serving_info:
             serving.append(serving_info['modifier']+" " +
                            "("+str(serving_info['gramWeight']) + " gr"+")")
 
@@ -58,7 +59,7 @@ def get_food_nutrient(food_id: str) -> dict:
     return vitamins_nutrient
 
 
-def is_in_selected_vitamins(vitamin_name: str) ->int:
+def is_in_selected_vitamins(vitamin_name: str) -> int:
     """check if vitamin in vitamin_name_united and return it's index, if vitamin isn't in vitamin_name_united return -1"""
     index = 0
     for item in VitaminNameData.vitamin_name_united:
@@ -93,7 +94,7 @@ def get_amount(age: float, gender: bool) -> dict:
         age - the age of user
         gender - the gender of user(1= Female , 0= Man)
     """
-    gender_name= "Female" if gender==1 else "Male"
+    gender_name = "Female" if gender == 1 else "Male"
     optimal_value = dict.fromkeys(VitaminNameData.vitamin_name, 0)
     for vit in VitaminNameData.vitamin_name:
         if vit == "Sodium":
