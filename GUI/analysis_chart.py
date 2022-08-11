@@ -1,19 +1,17 @@
-
-
 from __future__ import annotations
 import tkinter.ttk as ttk
 import tkinter as tk
-import helper
-from vitamin_data import VitaminNameData
 from ttkbootstrap.tableview import Tableview
-from ttkbootstrap.constants import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import diets_tabs
 import reset_fields
+from vitamin_data import VitaminNameData
+import helper
 
 
-lst_of_meals = ["Breakfast", "Lunch", "Dinner", "Snacks"]
+
+lst_of_meals = ["breakfast", "lunch", "dinner", "snacks"]
 
 
 def show_analysis_vitamin(diet_tab: diets_tabs.DietsTab, chosen_diet: str, vitamin: str):
@@ -23,10 +21,10 @@ def show_analysis_vitamin(diet_tab: diets_tabs.DietsTab, chosen_diet: str, vitam
         chosen_diet - the diet the user wanted to show
         vitamin - the vitamin the user choose
     """
-    reset_fields.reset_frame(diet_tab.analysis_vitamin_pei)
-    reset_fields.reset_frame(diet_tab.analysis_vitamin_meal)
+    reset_fields.reset_frame(diet_tab.analysis_vitamin_pei_frame)
+    reset_fields.reset_frame(diet_tab.analysis_vitamin_meal_frame)
 
-    ttk.Label(diet_tab.analysis_vitamin_pei, text=vitamin).grid(
+    ttk.Label(diet_tab.analysis_vitamin_pei_frame, text=vitamin).grid(
         row=0, column=2, sticky='n')
 
     show_pei(diet_tab, chosen_diet, vitamin)
@@ -34,8 +32,8 @@ def show_analysis_vitamin(diet_tab: diets_tabs.DietsTab, chosen_diet: str, vitam
 
 def show_pei(diet_tab: diets_tabs.DietsTab, chosen_diet: str, vitamin: str):
     """calculate the intake of the vitamin for each meal"""
-    frame_chart = tk.Frame(diet_tab.analysis_vitamin_pei)
-    frame_chart.grid(row=1, column=2)
+    chart_frame = tk.Frame(diet_tab.analysis_vitamin_pei_frame)
+    chart_frame.grid(row=1, column=2)
 
     is_all_zero = True
     vitamin_values = []
@@ -49,18 +47,18 @@ def show_pei(diet_tab: diets_tabs.DietsTab, chosen_diet: str, vitamin: str):
         vitamin_values += [to_add]
 
     if not is_all_zero:
-        build_pei(diet_tab, vitamin_values, frame_chart, vitamin, chosen_diet)
+        build_pei(diet_tab, vitamin_values, chart_frame, vitamin, chosen_diet)
     else:  # no intake of this vitamin
-        ttk.Label(frame_chart, text="No intake at all").grid(
+        ttk.Label(chart_frame, text="No intake at all").grid(
             row=2, column=2, pady=10, padx=30, sticky='ns')
 
 
-def build_pei(diet_tab: diets_tabs.DietsTab, vitamin_values: list, frame_chart: tk.Frame, vitamin: str, chosen_diet: str):
+def build_pei(diet_tab: diets_tabs.DietsTab, vitamin_values: list, chart_frame: tk.Frame, vitamin: str, chosen_diet: str):
     """build the pei of vitamin
     Args:
         diet_tab - diets_tabs object from GUI
         vitamin_values - the value of vitamin intake in each meal
-        frame_chart - the pei's frame
+        chart_frame - the pei's frame
         chosen_diet - the diet the user wanted to show
         vitamin - the vitamin the user choose
     """
@@ -75,32 +73,32 @@ def build_pei(diet_tab: diets_tabs.DietsTab, vitamin_values: list, frame_chart: 
                bbox_to_anchor=(0.85, 0.5))
     # Equal aspect ratio ensures that pie is drawn as a circle.
     ax1.axis('equal')
-    chart1 = FigureCanvasTkAgg(fig1, frame_chart)
+    chart1 = FigureCanvasTkAgg(fig1, chart_frame)
     chart1.get_tk_widget().grid()
 
-    meals_frame_legend = ttk.Frame(frame_chart)
-    meals_frame_legend.grid(row=3, padx=10, column=0, sticky='we')
+    meals_legend_frame = ttk.Frame(chart_frame)
+    meals_legend_frame.grid(row=3, padx=10, column=0, sticky='we')
 
-    ttk.Button(meals_frame_legend, text="Breakfast", bootstyle="success", command=lambda: show_meal_analysis(
-        "Breakfast", vitamin, chosen_diet, diet_tab)).grid(row=3, column=0, padx=20, pady=10)
-    ttk.Button(meals_frame_legend, text="Lunch", bootstyle="info", command=lambda: show_meal_analysis(
-        "Lunch", vitamin, chosen_diet, diet_tab)).grid(row=3, column=1, padx=20, pady=10)
-    ttk.Button(meals_frame_legend, text="Dinner", bootstyle="warning", command=lambda: show_meal_analysis(
-        "Dinner", vitamin, chosen_diet, diet_tab)).grid(row=3, column=2, padx=20, pady=10)
-    ttk.Button(meals_frame_legend, text="Snacks", bootstyle="danger", command=lambda: show_meal_analysis(
-        "Snacks", vitamin, chosen_diet, diet_tab)).grid(row=3, column=3, padx=20, pady=10,)
+    ttk.Button(meals_legend_frame, text="breakfast", bootstyle="success", command=lambda: show_meal_analysis_frame(
+        "breakfast", vitamin, chosen_diet, diet_tab)).grid(row=3, column=0, padx=20, pady=10)
+    ttk.Button(meals_legend_frame, text="lunch", bootstyle="info", command=lambda: show_meal_analysis_frame(
+        "lunch", vitamin, chosen_diet, diet_tab)).grid(row=3, column=1, padx=20, pady=10)
+    ttk.Button(meals_legend_frame, text="dinner", bootstyle="warning", command=lambda: show_meal_analysis_frame(
+        "dinner", vitamin, chosen_diet, diet_tab)).grid(row=3, column=2, padx=20, pady=10)
+    ttk.Button(meals_legend_frame, text="snacks", bootstyle="danger", command=lambda: show_meal_analysis_frame(
+        "snacks", vitamin, chosen_diet, diet_tab)).grid(row=3, column=3, padx=20, pady=10,)
 
 
-def show_meal_analysis(meal: str, vitamin: str, chosen_diet: str, diet_tab: diets_tabs.DietsTab):
+def show_meal_analysis_frame(meal: str, vitamin: str, chosen_diet: str, diet_tab: diets_tabs.DietsTab):
     """build data-table of all foods in meal"""
-    reset_fields.reset_frame(diet_tab.analysis_vitamin_meal)
+    reset_fields.reset_frame(diet_tab.analysis_vitamin_meal_frame)
 
-    meal_analysis = ttk.LabelFrame(diet_tab.analysis_vitamin_meal, width=400)
-    meal_analysis.grid(column=4, row=0)
+    meal_analysis_frame = ttk.LabelFrame(diet_tab.analysis_vitamin_meal_frame, width=400)
+    meal_analysis_frame.grid(column=4, row=0)
 
-    ttk.Label(meal_analysis, text=meal).grid(sticky="ew")
+    ttk.Label(meal_analysis_frame, text=meal).grid(sticky="ew")
 
-    food_lst = diet_tab.current_user.get_foods_from_meal_diet(
+    food_list = diet_tab.current_user.get_foods_from_meal_diet(
         chosen_diet, meal)
 
     coldata = [
@@ -111,26 +109,26 @@ def show_meal_analysis(meal: str, vitamin: str, chosen_diet: str, diet_tab: diet
         {"text": "%", "width": 60}
     ]
 
-    meal_datatable = Tableview(
-        master=meal_analysis,
+    meal_tableview = Tableview(
+        master=meal_analysis_frame,
         coldata=coldata,
         paginated=True,
         searchable=True
     )
 
-    for food in food_lst:
+    for food in food_list:
 
         ratio = helper.get_ratio(food.serving)
         consumption_food = (
             float(food.vitamins[vitamin]) * ratio)*float(food.amount)
         consumption_food_str = str(
             round(consumption_food, 2)) + " "+VitaminNameData.units[vitamin]
-        consumption_user = diet_tab.current_user.user.get_diet(
+        consumption_total_user = diet_tab.current_user.user.get_diet(
             chosen_diet).get_vitamins()[vitamin]
         proportional_str = str(
-            round((float(consumption_food/consumption_user))*100, 2))+" %"
+            round((float(consumption_food/consumption_total_user))*100, 2))+" %"
 
-        meal_datatable.insert_row('end', [
-                                  food.name, food.amount, food.serving, consumption_food_str, proportional_str])
-    meal_datatable.load_table_data()
-    meal_datatable.grid()
+        meal_tableview.insert_row('end', [
+                                  food.get_name(), food.get_amount(), food.get_serving(), consumption_food_str, proportional_str])
+    meal_tableview.load_table_data()
+    meal_tableview.grid()

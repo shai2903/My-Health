@@ -5,7 +5,7 @@ sys.path.append(os.path.abspath('../diet proj'))
 
 
 class OptimalData:
-    """Class contain dataframe for each vitamin with optimal consumption values
+    """Class contain dataframe for each vitamin with optimal intake values
     (according to age and gender)"""
     Vitamin_A = pd.read_excel(
         'additional_files/Data_vitamin.xlsx', sheet_name='vitamin_A')

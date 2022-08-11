@@ -1,9 +1,10 @@
 from __future__ import annotations
+import tkinter as tk
 from tkinter import FLAT
 from ttkbootstrap import Style
 import welcome_page
 import tab_creator
-import tkinter as tk
+
 
 
 class StartApp(tk.Tk):
@@ -23,7 +24,7 @@ class StartApp(tk.Tk):
         frame = welcome_page.WelcomePage(container, self)
         self.frames[welcome_page.WelcomePage] = frame
         frame.grid(row=0, column=0, sticky="nsew")
-        self.show_WelcomePage()
+        self.show_welcome_page()
 
     def set_style(self):
         """set the style of window"""
@@ -35,7 +36,7 @@ class StartApp(tk.Tk):
         self.style.configure("TLabelframe", font="Aharoni 12")
         self.style.configure("error.login.TLabel", font="Calibri 12")
 
-    def show_WelcomePage(self):
+    def show_welcome_page(self):
         """show the frame of WelcomePage"""
         # self.state('zoomed')
         self.geometry("1000x700")
@@ -67,7 +68,7 @@ class StartApp(tk.Tk):
             frame = welcome_page.WelcomePage(parent_frame, self)
             self.frames[welcome_page.WelcomePage] = frame
             frame.grid(row=0, column=0, sticky="nsew")
-            self.show_WelcomePage()
+            self.show_welcome_page()
 
 
 if __name__ == '__main__':

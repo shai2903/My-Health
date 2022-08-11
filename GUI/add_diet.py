@@ -6,7 +6,8 @@ import check_fields
 import error
 
 def add_new_diet(diet_tab: diets_tabs.DietsTab, error_label):
-    """add new diet to collection and update self.user with new diet, reset all fields in new_diet tab"""
+    """add new diet to collection and update self.user with new diet,
+    reset all fields in new_diet tab"""
     try:
         check_fields.check_diet_name(diet_tab.get_entry(
             "diet_name"), diet_tab.current_user.get_diets_name())

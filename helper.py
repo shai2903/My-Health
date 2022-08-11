@@ -1,8 +1,8 @@
 import json
-from datetime import datetime, date
+import re
 import bcrypt
 import error
-
+from datetime import datetime, date
 
 def is_empty(my_str: str) -> bool:
     """check if string is empty, return True if it is ,otherwise False"""
@@ -24,19 +24,19 @@ def to_dict(obj: object) -> json:
     return json.loads(json.dumps(obj, default=lambda o: o.__dict__))
 
 
-def verify_password(password: str, db_password: str):
+def verify_password(password: str, collection_password: str):
     """check if password is the same as user_doc's password"""
-    encoded_password = password.encode('utf-8')
+    password_encoded = password.encode('utf-8')
     # verify the password with the collection
-    if not bcrypt.checkpw(encoded_password, db_password):
+    if not bcrypt.checkpw(password_encoded, collection_password):
         raise error.ValidationError()
 
 
-def make_hashed_password(password: str) -> str:
+def make_password_hashed(password: str) -> str:
     """return an hashed password from password"""
-    encoded_password = password.encode('utf-8')
-    hashed_password = bcrypt.hashpw(encoded_password, bcrypt.gensalt())
-    return hashed_password
+    password_encoded = password.encode('utf-8')
+    password_hashed = bcrypt.hashpw(password_encoded, bcrypt.gensalt())
+    return password_hashed
 
 
 def convert_datetime(birthday: str) -> datetime:

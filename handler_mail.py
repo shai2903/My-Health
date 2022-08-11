@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 import string
 import random
 
-me = "somemail"
+ME = "somemail"
 
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits) -> str:
@@ -17,7 +17,7 @@ def send_mail_reset(mail: str, username: str):
     msg = MIMEMultipart('alternative')
 
     msg['Subject'] = "Reset password - My-Health"
-    msg['From'] = me
+    msg['From'] = ME
     msg['To'] = mail
 
     password = id_generator()
@@ -46,7 +46,7 @@ def send_mail_reset(mail: str, username: str):
     server.ehlo()
     server.starttls()
     server.login("somemail", "somepass")
-    server.sendmail(me, [mail], msg.as_string())
+    server.sendmail(ME, [mail], msg.as_string())
     server.close()
 
     return password

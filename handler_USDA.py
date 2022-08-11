@@ -12,7 +12,7 @@ def get_all_options_USDA(food_name: str) -> list:
            food_name - the food name we search
     """
     json_result = requests.get(
-        'https://api.nal.usda.gov/fdc/v1/foods/search?api_key={}&query={}&dataType=SR Legacy'.format(key_from_USDA, food_name))
+        f'https://api.nal.usda.gov/fdc/v1/foods/search?api_key={key_from_USDA}&query={food_name}&dataType=SR Legacy')
     return json_result.json()["foods"]
 
 
@@ -52,15 +52,16 @@ def get_food_nutrient(food_id: str) -> dict:
                     nutrients['nutrient']['name'].lower())
                 if index >= 0:
                     if 'amount' in nutrients:
-                        offical_name = VitaminNameData.vitamin_name[index]
-                        vitamins_nutrient[offical_name] += round(
+                        official_name = VitaminNameData.vitamin_name[index]
+                        vitamins_nutrient[official_name] += round(
                             float(nutrients['amount']), 2)
 
     return vitamins_nutrient
 
 
 def is_in_selected_vitamins(vitamin_name: str) -> int:
-    """check if vitamin in vitamin_name_united and return it's index, if vitamin isn't in vitamin_name_united return -1"""
+    """check if vitamin in vitamin_name_united and return it's index,
+    if vitamin isn't in vitamin_name_united return -1"""
     index = 0
     for item in VitaminNameData.vitamin_name_united:
         if isinstance(item, tuple):

@@ -5,7 +5,11 @@ import error
 from current_user import CurrentUser
 
 
-class personalTab():
+class PersonalTab():
+    """Class creating the change-personal information tab
+    Attributes:
+        current_user - the current user object
+    """
     def __init__(self, current_user: CurrentUser):
         self.current_user = current_user
 
@@ -37,59 +41,60 @@ class personalTab():
         password_change_frame.grid(row=3, ipady=10, ipadx=10, sticky='ew')
         ttk.Label(password_change_frame, text="Old Password :").grid(
             row=3, column=1, pady=10)
-        old_pass_entry = ttk.Entry(password_change_frame, width=15, show="*")
-        old_pass_entry.grid(row=3, column=2)
+        old_password_entry = ttk.Entry(password_change_frame, width=15, show="*")
+        old_password_entry.grid(row=3, column=2)
         ttk.Label(password_change_frame, text="New Password :").grid(
             row=4, column=1, pady=10)
-        new_pass_entry = ttk.Entry(password_change_frame, width=15, show="*")
-        new_pass_entry.grid(row=4, column=2)
+        new_password_entry = ttk.Entry(password_change_frame, width=15, show="*")
+        new_password_entry.grid(row=4, column=2)
         ttk.Label(password_change_frame, text="Reapet New Password :").grid(
             row=5, column=1, pady=10)
-        new_reapet_pass_entry = ttk.Entry(
+        new_repeat_password_entry = ttk.Entry(
             password_change_frame, width=15, show="*")
-        new_reapet_pass_entry.grid(row=5, column=2)
-        ttk.Button(password_change_frame, text="Ok", command=lambda: self.change_password(old_pass_entry.get(
-        ), new_pass_entry.get(), new_reapet_pass_entry.get(), password_change_frame)).grid(row=7, column=2, pady=10)
+        new_repeat_password_entry.grid(row=5, column=2)
+        ttk.Button(password_change_frame, text="Ok", command=lambda: self.change_password(old_password_entry.get(
+        ), new_password_entry.get(), new_repeat_password_entry.get(), password_change_frame)).grid(row=7, column=2, pady=10)
 
-    def change_password(self, old_password: str, new_password: str, repeat_password: str, password_change_frame: ttk.Frame):
+    def change_password(self, password_old: str, password_new: str, password_repeat: str, password_change_frame: ttk.Frame):
         """change the old password to a new one, but first check:
             1. a valid new and old password
             2. the old password is the same as the user password
             3. repeated password is the same as new password
         Args:
-            old_password -  the old password the user enter
-            new_password - the new password the user want 
-            repeat_password - the user repeat the new password fo verification
+            password_old -  the old password the user enter
+            password_new - the new password the user want 
+            password_repeat - the user repeat the new password fo verification
             password_change_frame - current frame
         """
 
         try:
             check_fields.check_changed_password(
-                new_password, old_password, repeat_password, self.current_user.get_password())
+                password_new, password_old, password_repeat, self.current_user.get_password())
         except error.ValidationError as exception:
             self.label_change(password_change_frame, str(exception))
             return
 
-        self.current_user.update_password(new_password)
+        self.current_user.update_password(password_new)
         self.label_change(password_change_frame, "Password changed")
 
-    def change_mail(self, mail_frame: ttk.Frame, new_mail: str):
-        """change the mail 
+    def change_mail(self, mail_frame: ttk.Frame, mail_new: str):
+        """change the mail
         Args:
-            new_mail - the new mail the user want
+            mail_new - the new mail the user want
             mail_frame - current frame"""
 
         # check if mail already exist for other user
         try:
             check_fields.check_changed_mail(
-                new_mail, self.current_user.get_mail())
+                mail_new, self.current_user.get_mail())
         except error.ValidationError as exception:
             self.label_change(mail_frame, str(exception))
             return
 
-        self.current_user.update_mail(new_mail)
+        self.current_user.update_mail(mail_new)
         self.label_change(mail_frame, "Mail changed")
 
     def label_change(self, frame: ttk.Frame, label_txt: str):
+        """Change the note label (mail notes or password notes)"""
         ttk.Label(frame, text=label_txt,
                   style="error.login.TLabel").grid(row=9, column=2, sticky="ew")

@@ -1,9 +1,9 @@
 from pymongo import MongoClient
-from diet import Diet
-import helper
-from user import User
 import bson
+import helper
 import error
+from user import User
+from diet import Diet
 
 connection = MongoClient()
 collection = connection.Main_Database.Users
@@ -21,8 +21,8 @@ def search_user_collection(username: str, password: str) -> User:
 
     try:
         helper.verify_password(password, user_doc["password"])
-    except error.ValidationError:
-        raise error.ValidationError("Wrong password")
+    except error.ValidationError as exc:
+        raise error.ValidationError("Wrong password") from exc
 
     user = User(user_doc["user"], user_doc["mail"], user_doc["password"],
                 user_doc["gender"], user_doc["birthday"], user_doc["num_of_diets"])
@@ -31,7 +31,7 @@ def search_user_collection(username: str, password: str) -> User:
     return user
 
 
-def add_to_DB(user: User):
+def add_to_collection(user: User):
     """add the user data to collection"""
     item = {
         "_id": bson.objectid.ObjectId(),
@@ -77,7 +77,7 @@ def get_mail(username: str):
     return user_doc["mail"]
 
 
-def delete_from_db(user_collection: dict, diet_name: str):
+def delete_from_collection(user_collection: dict, diet_name: str):
     """delete diet from collection"""
     collection.update_many({"_id": user_collection["_id"]}, {
         "$unset": {"diets."+diet_name: ""}})
@@ -85,22 +85,22 @@ def delete_from_db(user_collection: dict, diet_name: str):
         "$inc": {"num_of_diets": -1}})
 
 
-def update_username(user_collection: dict, new_username: str):
+def update_username(user_collection: dict, username_new: str):
     """update username in collection"""
     collection.update_many({"_id": user_collection["_id"]}, {
-        "$set": {"user": new_username}})
+        "$set": {"user": username_new}})
 
 
-def update_password(user_collection: dict, new_password: str):
+def update_password(user_collection: dict, password_new: str):
     """update password in collection"""
     collection.update_many({"_id": user_collection["_id"]}, {
-        "$set": {"password": new_password}})
+        "$set": {"password": password_new}})
 
 
-def update_mail(user_collection: dict, new_mail: str):
+def update_mail(user_collection: dict, mail_new: str):
     """update mail in collection"""
     collection.update_many({"_id": user_collection["_id"]}, {
-        "$set": {"mail": new_mail}})
+        "$set": {"mail": mail_new}})
 
 
 def update_diets(user_collection: dict, diet_name: str, is_edit: bool, current_diet: Diet):

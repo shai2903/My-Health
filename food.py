@@ -26,12 +26,12 @@ class Food:
                     setattr(self, key, value)
 
     def calculate_for_serving(self, vitamin):
-        """calculte consumption for serving and amount"""
+        """calculate intake for serving and amount"""
         ratio = helper.get_ratio(self.serving)
-        consumption_food = (
+        intake_food = (
             float(self.vitamins[vitamin]) * ratio)*float(self.amount)
 
-        return consumption_food
+        return intake_food
 
     def get_vitamins(self):
         return self.vitamins
@@ -41,3 +41,6 @@ class Food:
 
     def get_serving(self):
         return self.serving
+
+    def get_name(self):
+        return self.name

@@ -1,14 +1,15 @@
 from __future__ import annotations
+from pickle import NONE
 import tkinter as tk
 import tkinter.ttk as ttk
 import ttkbootstrap
 import check_fields as check_fields
 import error
-import handle_db
+import handler_collection
 from user import User
 import start_app
 import helper
-import mail_handler
+import handler_mail
 
 
 class WelcomePage(tk.Frame):
@@ -18,6 +19,7 @@ class WelcomePage(tk.Frame):
     Attributes:
         parent_frame - the parent frame of this app
         controller - the start_app object of this GUI
+        user - user object for the user who enter his data
     """
 
     def __init__(self, parent_frame: tk.Frame, controller: start_app):
@@ -31,13 +33,15 @@ class WelcomePage(tk.Frame):
         ttk.Label(self, text="Welcome", style="Welcome.TLabel").grid(
             row=0, column=2, pady=5)
 
+        self.user=None
+
         # create the login frame and the sign-up frame
         self.create_login_frame()
         self.create_signup_frame()
         self.create_forgot_password_frame()
 
     def create_forgot_password_frame(self):
-        """create the forgor password frame"""
+        """create the forgot password frame"""
 
         self.forgot_password_frame = ttk.Labelframe(self, width=300)
         self.forgot_password_frame.grid(row=1, column=1, padx=10, sticky='s')
@@ -63,7 +67,7 @@ class WelcomePage(tk.Frame):
 
     def send_reset_password(self, mail: str, username: str, label: tk.Label):
         """create the frame of 'forgot password'"""
-        if not handle_db.is_username_exists(username):
+        if not handler_collection.is_username_exists(username):
             label['text'] = "Username doesn't exist"
             return
 
@@ -75,12 +79,12 @@ class WelcomePage(tk.Frame):
             return
 
         try:
-            password = mail_handler.send_mail_reset(mail, username)
-            hashed_new_password = helper.make_hashed_password(password)
-            handle_db.update_password(
-                handle_db.get_user(username), hashed_new_password)
+            password = handler_mail.send_mail_reset(mail, username)
+            password_hashed_new = helper.make_password_hashed(password)
+            handler_collection.update_password(
+                handler_collection.get_user(username), password_hashed_new)
 
-        except Exception as exception:
+        except:
             label['text'] = "couldn't send mail"
             return
 
@@ -115,7 +119,7 @@ class WelcomePage(tk.Frame):
         """
         try:
             check_fields.check_empty_fields(username, password)
-            self.user = handle_db.search_user_collection(username, password)
+            self.user = handler_collection.search_user_collection(username, password)
 
         except error.ValidationError as exception:
             self.label_error(self.login_frame, 5, 2, str(exception))
@@ -168,7 +172,7 @@ class WelcomePage(tk.Frame):
         Args:
             username - the username the user enter
             password - the password the user enter
-            repeat_password -  the repeat password the user enter
+            password_repeat -  the repeat password the user enter
             mail - the mail the user enter
             birthday - the birthday the user enter
             gender - the gender the user enter
@@ -181,26 +185,26 @@ class WelcomePage(tk.Frame):
             return
 
         gender_bool = 1 if gender == "Female" else 0
-        hashed_password = helper.make_hashed_password(password)
+        password_hashed = helper.make_password_hashed(password)
         birthday_datetime = helper.convert_datetime(birthday)
-        self.user = User(username, mail, hashed_password,
+        self.user = User(username, mail, password_hashed,
                          gender_bool, birthday_datetime)
-        handle_db.add_to_DB(self.user)
+        handler_collection.add_to_collection(self.user)
         self.show_tab_creator()
 
-    def validation_details_signup(self, username: str, password: str, repeat_password: str, mail: str, gender: str, birthday: str):
+    def validation_details_signup(self, username: str, password: str, password_repeat: str, mail: str, gender: str, birthday: str):
         """validation all the fields the user enter
         Args:
             username - the username the user enter
             password - the password the user enter
-            repeat_password - repeat_password username the user enter
+            password_repeat - password_repeat username the user enter
             mail - the mail the user enter
             gender - the gender the user enter
             birthday - the birthday the user enter
         """
         try:
             check_fields.check_username(username)
-            check_fields.check_password(password, repeat_password)
+            check_fields.check_password(password, password_repeat)
             check_fields.check_mail(mail)
             check_fields.check_birthday(birthday)
             check_fields.check_gender(gender)

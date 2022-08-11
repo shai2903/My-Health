@@ -2,6 +2,7 @@ import json
 import bcrypt
 from diet import Diet
 from datetime import datetime
+
 salt = bcrypt.gensalt()
 
 
@@ -60,17 +61,17 @@ class User:
         self.num_of_diets -= 1
         del self.diets[diet_name]
 
-    def set_username(self, new_username: str):
-        self.username = new_username
+    def set_username(self, username_new: str):
+        self.username = username_new
 
-    def set_mail(self, new_mail: str):
-        self.mail = new_mail
+    def set_mail(self, mail_new: str):
+        self.mail = mail_new
 
     def get_password(self):
         return self.password
 
-    def set_password(self, new_password: str):
-        self.password = new_password
+    def set_password(self, password_new: str):
+        self.password = password_new
 
     def get_diets_name(self) -> list:
         return self.diets.keys()
@@ -80,9 +81,9 @@ class User:
         return self.diets[chosen_diet].get_vitamin_value_from_meal(meal, vitamin)
 
     def get_vitamin_value_from_diet(self, chosen_diet: str, vitamin: str) -> float:
-        """return the vitamin consumption from chosen_diet"""
+        """return the vitamin intake from chosen_diet"""
         return self.diets[chosen_diet].get_vitamin_value(vitamin)
 
     def get_all_vitamin_values_from_diet(self, chosen_diet: str):
-        """return all vitamins consumption from chosen_diet"""
-        self.diets[chosen_diet].get_vitamins()
+        """return all vitamins intake from chosen_diet"""
+        return self.diets[chosen_diet].get_vitamins()

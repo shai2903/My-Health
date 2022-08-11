@@ -1,11 +1,11 @@
 from __future__ import annotations
+import tkinter as tk
+import tkinter.ttk as ttk
 import welcome_page
 import start_app
-import tkinter as tk
 from current_user import CurrentUser
-import tkinter.ttk as ttk
 from diets_tabs import DietsTab
-from personal_tab import personalTab
+from personal_tab import PersonalTab
 
 
 class TabPage(tk.Frame):
@@ -39,7 +39,7 @@ class TabPage(tk.Frame):
         tab_edit_personal_data_frame = ttk.Frame(
             control_tab, width=900, height=2000)
         tab_edit_personal_data_frame.grid(row=0, column=0)
-        personal_obj = personalTab(self.current_user)
+        personal_obj = PersonalTab(self.current_user)
         personal_obj.create_personal_tab(tab_edit_personal_data_frame)
 
         tab_all_diets_frame = ttk.Frame(control_tab, width=900, height=2000)

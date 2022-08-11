@@ -6,7 +6,7 @@ from meal import Meal
 from food import Food
 
 
-def delete_item_from_list_box(diet_tab: diets_tabs.DietsTab, item_lunch: str, item_breakfast: str, item_snacks: str, item_dinner: str):
+def delete_item_from_list_box(diet_tab: diets_tabs.DietsTab):
     """delete item from meal, choose the right meal to delete from (delete only from one)
     Args:
         diet_tab - the diet tab object of GUI
@@ -15,18 +15,22 @@ def delete_item_from_list_box(diet_tab: diets_tabs.DietsTab, item_lunch: str, it
         item_snacks - the item we want to delete from snacks
         item_dinner - the item we want to delete from dinner
     """
- 
+    item_lunch=diet_tab.tableview_lunch.view.selection()
+    item_breakfast=diet_tab.tableview_breakfast.view.selection()
+    item_snacks=diet_tab.tableview_snacks.view.selection()
+    item_dinner=diet_tab.tableview_snacks.view.selection()
+    
     if item_lunch:
-        delete_from_meal(diet_tab, item_lunch, "Lunch")
+        delete_from_meal(diet_tab, item_lunch, "lunch")
         return
     if item_breakfast:
-        delete_from_meal(diet_tab, item_breakfast, "Breakfast")
+        delete_from_meal(diet_tab, item_breakfast, "breakfast")
         return
     if item_snacks:
-        delete_from_meal(diet_tab, item_snacks, "Snacks")
+        delete_from_meal(diet_tab, item_snacks, "snacks")
         return
     if item_dinner:
-        delete_from_meal(diet_tab, item_dinner, "Dinner")
+        delete_from_meal(diet_tab, item_dinner, "dinner")
         return
 
 
@@ -48,9 +52,9 @@ def delete_from_meal(diet_tab: diets_tabs.DietsTab, item_to_del: str, meal: str)
     food_obj: Food = meal_obj.delete_food(food_name)
 
     # update vitamin frame
-    vitamin_intake = update.calculate_consumption(diet_tab, food_obj.get_vitamins(),
+    vitamin_intake = update.calculate_intake(diet_tab, food_obj.get_vitamins(),
                                                   food_obj.get_serving(), food_obj.get_amount(), True)
-    update.set_consumption_widgets(diet_tab, vitamin_intake)
+    update.set_intake_widgets(diet_tab, vitamin_intake)
 
 
 def delete_diet(diet_tab: diets_tabs.DietsTab):
