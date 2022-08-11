@@ -33,7 +33,7 @@ class WelcomePage(tk.Frame):
         ttk.Label(self, text="Welcome", style="Welcome.TLabel").grid(
             row=0, column=2, pady=5)
 
-        self.user=None
+        self.user = None
 
         # create the login frame and the sign-up frame
         self.create_login_frame()
@@ -119,7 +119,8 @@ class WelcomePage(tk.Frame):
         """
         try:
             check_fields.check_empty_fields(username, password)
-            self.user = handler_collection.search_user_collection(username, password)
+            self.user = handler_collection.search_user_collection(
+                username, password)
 
         except error.ValidationError as exception:
             self.label_error(self.login_frame, 5, 2, str(exception))
