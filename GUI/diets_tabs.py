@@ -292,7 +292,6 @@ class DietsTab():
         else:  # in edit mode get the saved value
             value = self.current_user.get_vitamin_value_from_diet(
                 chosen_diet, vitamin)
-            print(vitamin)
             setattr(self, vitamin+"_intake_label",
                     ttk.Label(intake_frame, text=str(round(value, 2))+" "+VitaminNameData.units[vitamin]))
 

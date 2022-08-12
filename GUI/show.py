@@ -10,7 +10,7 @@ def show_serving(diet_tab: diets_tabs.DietsTab):
     """
     # get the of the chosen food
     food=diet_tab.food_options_combobox.get() #the food we search
-    serving_combobox=diet_tab.serving_combobox.get()
+    serving_combobox=diet_tab.serving_combobox
     food_id = diet_tab.from_description_to_fcdif[food]
     optional_serving_list: list = handler_USDA.get_serving_option(str(food_id))
 
