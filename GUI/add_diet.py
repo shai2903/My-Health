@@ -1,18 +1,19 @@
 from __future__ import annotations
 from tkinter import END
+import tkinter as tk
 import reset_fields
 import diets_tabs
 import check_fields
-import error
+import error_validate 
 
-def add_new_diet(diet_tab: diets_tabs.DietsTab, error_label):
-    """add new diet to collection and update self.user with new diet,
+def add_new_diet(diet_tab: diets_tabs.DietsTab, error_label: tk.Label):
+    """Add new diet to collection and update self.user with new diet,
     reset all fields in new_diet tab"""
     try:
         check_fields.check_diet_name(diet_tab.get_entry(
             "diet_name"), diet_tab.current_user.get_diets_name())
         error_label['text'] = ""
-    except error.ValidationError as exception:
+    except error_validate.DietValidationError as exception:
         error_label['text'] = str(exception)
         return
 
@@ -21,12 +22,12 @@ def add_new_diet(diet_tab: diets_tabs.DietsTab, error_label):
 
 
 def add_diet_to_all_diets_list(diet_tab: diets_tabs.DietsTab, diet_name: str):
-    """add diet_name to all diets names listbox"""
+    """Add diet_name to all diets names listbox"""
     diet_tab.all_diets_listbox.insert(END, diet_name)
 
 
 def add_diet_to_diets(diet_tab: diets_tabs.DietsTab, is_edit: bool):
-    """add new diet to all diets or if is_edit=True add edited diet to diets
+    """Add new diet to all diets or if is_edit=True add edited diet to diets
     update the collection and the local user args
     Args:
         is_edit - true if in edit mode

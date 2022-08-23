@@ -1,33 +1,31 @@
 from __future__ import annotations
 import tkinter as tk
 import tkinter.ttk as ttk
-import welcome_page
 import start_app
 from current_user import CurrentUser
 from diets_tabs import DietsTab
 from personal_tab import PersonalTab
-
+from user import User
 
 class TabPage(tk.Frame):
 
-    def __init__(self, parent_frame: tk.Frame, welcome_obj: welcome_page.WelcomePage, controller: start_app.StartApp):
+    def __init__(self, parent_frame: tk.Frame, user: User, controller: start_app.StartApp):
         """Class for the user app GUI with all the features to analysis and calculate your vitamin intake daily.
         Args:
             parent_frame - the current frame
-            welcome_obj - the welcome object, we can take the user data from it
+            user - the current user that used the app
             controller - startapp object
         """
         tk.Frame.__init__(self, parent_frame)
         self.controller = controller
-        self.welcome_obj = welcome_obj
         self.parent_frame = parent_frame
 
-        self.current_user = CurrentUser(welcome_obj.user)
+        self.current_user = CurrentUser(user)
 
         self.create_tabs()
 
     def create_tabs(self):
-        """create all the tabs and their frames"""
+        """Create all the tabs and their frames"""
         control_tab = ttk.Notebook(
             self, style='lefttab.TNoteboOk', width=2000, height=2000)
 
@@ -58,5 +56,5 @@ class TabPage(tk.Frame):
                    command=self.logout).grid(row=0, column=0)
 
     def logout(self):
-        """logout from current user and go back to WelcomePage"""
+        """Logout from current user and go back to WelcomePage"""
         self.controller.switch_frames(self.parent_frame, "WelcomePage")

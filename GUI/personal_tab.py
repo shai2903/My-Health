@@ -1,7 +1,7 @@
 from __future__ import annotations
 import tkinter.ttk as ttk
 import check_fields
-import error
+import error_validate 
 from current_user import CurrentUser
 
 
@@ -14,7 +14,7 @@ class PersonalTab():
         self.current_user = current_user
 
     def create_personal_tab(self, edit_personal_data_frame: ttk.Frame):
-        """ create the change personal data frame
+        """Create the change personal data frame
         Args:
             edit_personal_data_frame - the frame of the edit personal data tab
         """
@@ -47,7 +47,7 @@ class PersonalTab():
             row=4, column=1, pady=10)
         new_password_entry = ttk.Entry(password_change_frame, width=15, show="*")
         new_password_entry.grid(row=4, column=2)
-        ttk.Label(password_change_frame, text="Reapet New Password :").grid(
+        ttk.Label(password_change_frame, text="Repeat New Password :").grid(
             row=5, column=1, pady=10)
         new_repeat_password_entry = ttk.Entry(
             password_change_frame, width=15, show="*")
@@ -56,13 +56,13 @@ class PersonalTab():
         ), new_password_entry.get(), new_repeat_password_entry.get(), password_change_frame)).grid(row=7, column=2, pady=10)
 
     def change_password(self, password_old: str, password_new: str, password_repeat: str, password_change_frame: ttk.Frame):
-        """change the old password to a new one, but first check:
+        """Change the old password to a new one, but first check:
             1. a valid new and old password
             2. the old password is the same as the user password
             3. repeated password is the same as new password
         Args:
             password_old -  the old password the user enter
-            password_new - the new password the user want 
+            password_new - the new password the user want
             password_repeat - the user repeat the new password fo verification
             password_change_frame - current frame
         """
@@ -70,7 +70,7 @@ class PersonalTab():
         try:
             check_fields.check_changed_password(
                 password_new, password_old, password_repeat, self.current_user.get_password())
-        except error.ValidationError as exception:
+        except error_validate.UserPassValidationError as exception:
             self.label_change(password_change_frame, str(exception))
             return
 
@@ -78,7 +78,7 @@ class PersonalTab():
         self.label_change(password_change_frame, "Password changed")
 
     def change_mail(self, mail_frame: ttk.Frame, mail_new: str):
-        """change the mail
+        """Change the mail
         Args:
             mail_new - the new mail the user want
             mail_frame - current frame"""
@@ -87,7 +87,7 @@ class PersonalTab():
         try:
             check_fields.check_changed_mail(
                 mail_new, self.current_user.get_mail())
-        except error.ValidationError as exception:
+        except error_validate.MailValidationError as exception:
             self.label_change(mail_frame, str(exception))
             return
 

@@ -13,7 +13,7 @@ class Food:
     """
 
     def __init__(self, food_id: str = "", name: str = "", serving: str = "", amount: str = "", vitamins: dict = "", dict_food=None):
-        """constructor for Food object"""
+        """Constructor for Food object"""
         if not dict_food:
             self.food_id: str = food_id
             self.name: str = name
@@ -26,7 +26,7 @@ class Food:
                     setattr(self, key, value)
 
     def calculate_for_serving(self, vitamin):
-        """calculate intake for serving and amount"""
+        """Calculate intake for serving and amount"""
         ratio = helper.get_ratio(self.serving)
         intake_food = (
             float(self.vitamins[vitamin]) * ratio)*float(self.amount)

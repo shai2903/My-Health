@@ -3,10 +3,12 @@ import handler_USDA
 import reset_fields
 import helper
 import diets_tabs
+import consts
+from vitamin_data.vitamin_names import VitaminName
 
 
 def add_food(diet_tab: diets_tabs.DietsTab):
-    """add chosen food to Meal object and to tableview
+    """Add chosen food to Meal object and to tableview
     Args:
         diet_tab - diets_tabs object from GUI
     """
@@ -33,7 +35,7 @@ def add_food(diet_tab: diets_tabs.DietsTab):
 
 
 def calculate_intake(diet_tab: diets_tabs.DietsTab, current_food_nutrient: dict, sreving: str, amount: str, is_delete: bool) -> dict:
-    """calculate the intake of user after adding\deleting food """
+    """Calculate the intake of user after adding\deleting food """
     ratio = helper.get_ratio(sreving)
     vitamin_intake = diet_tab.current_user.get_current_diet_vitamins()
 
@@ -49,7 +51,7 @@ def calculate_intake(diet_tab: diets_tabs.DietsTab, current_food_nutrient: dict,
 
 
 def set_intake_widgets(diet_tab: diets_tabs.DietsTab, intake_dict: dict):
-    """set all widget with update intake_dict values """
+    """Set all widget with update intake_dict values """
     # update all vitamin's progressbar , label and current_meal dict
     for vitamin, intake_value in intake_dict.items():
 
@@ -58,12 +60,12 @@ def set_intake_widgets(diet_tab: diets_tabs.DietsTab, intake_dict: dict):
         rounded_val = round(intake_value, 2)
 
         getattr(diet_tab, vitamin+"_intake_label").config(
-            text=str(rounded_val)+" "+handler_USDA.VitaminNameData.units[vitamin])
+            text=str(rounded_val)+" "+VitaminName.units[vitamin])
 
-        color = "#42f5b6"
+        color = consts.GREEN_PERCENTAGE
         if optimal_quantity:
             if intake_value > optimal_quantity:
-                color = "#f55142"
+                color = consts.RED_PERCENTAGE
             getattr(diet_tab, vitamin +
                     "_pbar").configure(value=intake_value)
             getattr(diet_tab, vitamin+"pbar_label")['text'] = str(

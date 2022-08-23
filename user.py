@@ -1,9 +1,7 @@
 import json
-import bcrypt
 from diet import Diet
 from datetime import datetime
 
-salt = bcrypt.gensalt()
 
 
 class User:
@@ -20,7 +18,7 @@ class User:
     """
 
     def __init__(self, username: str, mail: str, password: str, gender: bool, birthday: datetime, num_of_diets: int = 0):
-        """constructor for User object"""
+        """Constructor for User object"""
         self.username: str = username
         self.mail: str = mail
         self.password: str = password
@@ -30,11 +28,11 @@ class User:
         self.num_of_diets: int = num_of_diets
 
     def get_foods_from_meal_diet(self, chosen_diet: str, meal: str) -> list:
-        """return list of all the foods from chosen_diet and chosen_meal"""
+        """Return list of all the foods from chosen_diet and chosen_meal"""
         return (self.diets[chosen_diet]).get_foods_from_meals(meal)
 
     def add_new_diet(self, diet: Diet, diet_name: str, is_edit: bool):
-        """add new diet to self.diets dict
+        """Add new diet to self.diets dict
         Args:
             diet - the diet we want to add
             diet_name - the diet name
@@ -46,18 +44,18 @@ class User:
             self.num_of_diets += 1
 
     def set_diets_json(self, json_diets: json):
-        """set the diet dict from a json"""
+        """Set the diet dict from a json"""
         if json_diets:
             for diet_name, diet_obj in json_diets.items():
                 diet_to_obj = Diet(diet_obj, True)
                 self.diets[diet_name] = diet_to_obj
 
     def get_diet(self, diet_name: str) -> Diet:
-        """return the diet object of diet_name from self.diets"""
+        """Return the diet object of diet_name from self.diets"""
         return self.diets[diet_name]
 
     def delete_diet(self, diet_name: str):
-        """delete diet from diets"""
+        """Delete diet from diets"""
         self.num_of_diets -= 1
         del self.diets[diet_name]
 
@@ -77,13 +75,13 @@ class User:
         return self.diets.keys()
 
     def get_vitamin_value_from_meal(self, chosen_diet: str, meal: str, vitamin: str) -> float:
-        """get vitamin intake value from meal in chosen_diet"""
+        """Get vitamin intake value from meal in chosen_diet"""
         return self.diets[chosen_diet].get_vitamin_value_from_meal(meal, vitamin)
 
     def get_vitamin_value_from_diet(self, chosen_diet: str, vitamin: str) -> float:
-        """return the vitamin intake from chosen_diet"""
+        """Return the vitamin intake from chosen_diet"""
         return self.diets[chosen_diet].get_vitamin_value(vitamin)
 
     def get_all_vitamin_values_from_diet(self, chosen_diet: str):
-        """return all vitamins intake from chosen_diet"""
+        """Return all vitamins intake from chosen_diet"""
         return self.diets[chosen_diet].get_vitamins()

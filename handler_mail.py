@@ -3,21 +3,21 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import string
 import random
+import consts
 
-ME = "somemail"
 
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits) -> str:
-    """create new random str"""
+    """Create new random str"""
     return ''.join(random.choice(chars) for _ in range(size))
 
 
 def send_mail_reset(mail: str, username: str):
-    """send new password to mail"""
+    """Send new password to mail"""
     msg = MIMEMultipart('alternative')
 
     msg['Subject'] = "Reset password - My-Health"
-    msg['From'] = ME
+    msg['From'] = consts.SENDER_MAIL
     msg['To'] = mail
 
     password = id_generator()
@@ -42,11 +42,11 @@ def send_mail_reset(mail: str, username: str):
 
     # Send the message via our own SMTP server, but don't include the
     # envelope header.
-    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server = smtplib.SMTP(consts.SMTP_SERVER, 587)
     server.ehlo()
     server.starttls()
-    server.login("somemail", "somepass")
-    server.sendmail(ME, [mail], msg.as_string())
+    server.login(consts.SENDER_MAIL, consts.SENDER_PASSWORD)
+    server.sendmail(consts.SENDER_MAIL, [mail], msg.as_string())
     server.close()
 
     return password

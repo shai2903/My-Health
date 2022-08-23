@@ -4,7 +4,7 @@ import diets_tabs
 
 
 def show_serving(diet_tab: diets_tabs.DietsTab):
-    """show all the serving option after food search 
+    """Show all the serving option after food search
     Args:
         diet_tab - diets_tabs object from GUI
     """
@@ -19,7 +19,7 @@ def show_serving(diet_tab: diets_tabs.DietsTab):
 
 
 def show_food_options(diet_tab: diets_tabs.DietsTab):
-    """ show in combobox all the food option from the food search
+    """Show in combobox all the food option from the food search
     Args:
         diet_tab - diets_tabs object from GUI
     """
@@ -34,7 +34,7 @@ def show_food_options(diet_tab: diets_tabs.DietsTab):
 
 
 def get_list_of_foods_options(diet_tab: diets_tabs.DietsTab, food: str) -> list:
-    """ return all the food option from the USDA search of food
+    """Return all the food option from the USDA search of food
     Args:
         diet_tab - diets_tabs object from GUI
         food - the food we want to search

@@ -4,7 +4,7 @@ from tkinter import FLAT
 from ttkbootstrap import Style
 import welcome_page
 import tab_creator
-
+from user import User
 
 
 class StartApp(tk.Tk):
@@ -14,8 +14,8 @@ class StartApp(tk.Tk):
         tk.Tk.__init__(self)
 
         container = tk.Frame(self)
-        self.title("Check your Vitamins")
-        self.iconbitmap("additional_files\Icon.ico")  # set the icon of window
+        self.title("My-Health")
+        self.iconbitmap("GUI\Icon.ico")  # set the icon of window
         container.grid()
 
         self.set_style()
@@ -27,7 +27,7 @@ class StartApp(tk.Tk):
         self.show_welcome_page()
 
     def set_style(self):
-        """set the style of window"""
+        """Set the style of window"""
         self.style = Style(theme='superhero')
         self.style.configure(
             "secondary.Horizontal.TFloodgauge", thickness=5, relief=FLAT)
@@ -37,8 +37,7 @@ class StartApp(tk.Tk):
         self.style.configure("error.login.TLabel", font="Calibri 12")
 
     def show_welcome_page(self):
-        """show the frame of WelcomePage"""
-        # self.state('zoomed')
+        """Show the frame of WelcomePage"""
         self.geometry("1000x700")
         self.state('normal')
         self.resizable(0, 0)  # can't resize window
@@ -46,21 +45,21 @@ class StartApp(tk.Tk):
         frame.tkraise()
 
     def show_tab_creator(self):
-        """show the frame of TabPage"""
+        """Show the frame of TabPage"""
         self.state('zoomed')
         self.resizable(1, 1)  # can resize window
         frame = self.frames[tab_creator.TabPage]
         frame.tkraise()
 
-    def switch_frames(self, parent_frame: tk.Frame, frame_name: str, welcome_obj: welcome_page.WelcomePage = None):
-        """ switch the frames to frame_name
+    def switch_frames(self, parent_frame: tk.Frame, frame_name: str, user: User = None):
+        """Switch the frames to frame_name
         Args:
             parent_frame - the parent frame of the new app
             frame_name - the name of the frame we want to switch
             welcome_obj - need to pass it to TabPage to get access for user data
         """
         if frame_name == "TabCreator":
-            frame = tab_creator.TabPage(parent_frame, welcome_obj, self)
+            frame = tab_creator.TabPage(parent_frame, user, self)
             self.frames[tab_creator.TabPage] = frame
             frame.grid(row=0, column=0, sticky="nsew")
             self.show_tab_creator()

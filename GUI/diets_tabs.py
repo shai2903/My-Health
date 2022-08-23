@@ -9,15 +9,13 @@ import show
 import delete
 import update
 import analysis_chart
-from vitamin_data import VitaminNameData
+from vitamin_data.vitamin_names import VitaminName
 from current_user import CurrentUser
 from diet import Diet
-
-lst_of_meals = ["breakfast", "lunch", "dinner", "snacks"]
-
+import consts
 
 class DietsTab():
-    """ Class creating the tabs frame.
+    """Class creating the tabs frame.
     Attributes:
         current_user - current user object
         food_name_entry - the entry of food the user choose
@@ -25,7 +23,7 @@ class DietsTab():
         amount_entry - the entry of the amount the user choose
         meal_combobox - the entry of the meal the user choose (lunch\breakfast\snacks\dinner)
         analysis_vitamin_meal_frame - frame for the meal analysis the user choose
-        analysis_vitamin_pei_frame - frame for analysis-pei
+        analysis_vitamin_pie_frame - frame for analysis-pie
         all_diets_listbox - list box of all diets
         serving_combobox - combobox of all the options serving options from USDA
         diet_name_entry - the entry of the diet name the user choose
@@ -38,13 +36,13 @@ class DietsTab():
         self.amount_entry=None
         self.meal_combobox=None
         self.analysis_vitamin_meal_frame=None
-        self.analysis_vitamin_pei_frame=None
+        self.analysis_vitamin_pie_frame=None
         self.all_diets_listbox=None
         self.serving_combobox=None
         self.diet_name_entry=None
 
     def create_new_diet_tab(self, new_diet_frame: ttk.Frame):
-        """create the new diet tab
+        """Create the new diet tab
         Args:
             new_diet_frame - the parent frame of all the tabs"""
 
@@ -53,7 +51,7 @@ class DietsTab():
         self.create_vitamin_frame(new_diet_frame, False)
 
     def create_vitamin_frame(self, new_diet_frame: ttk.Frame, is_edit: bool, chosen_diet: str = ""):
-        """create the parent frame of all the vitamin related data
+        """Create the parent frame of all the vitamin related data
         (i.e: optimal value and user intake)
         Args:
             new_diet_frame - the frame of the Add_new_edit tab
@@ -70,7 +68,7 @@ class DietsTab():
         self.create_optimal_frame(vitamin_frame)
 
     def create_vitamin_intake_frame(self, vitamin_frame: ttk.LabelFrame, is_edit: bool, chosen_diet: str):
-        """create the user intake vitamin frame
+        """Create the user intake vitamin frame
         (i.e how much vitamin he consume from the food in is diet)
         Args:
             vitamin_frame - parent of the intake frame
@@ -82,12 +80,12 @@ class DietsTab():
         ttk.Label(intake_frame, text="Your intake").grid(
             row=0, column=4, pady=5)
 
-        for count,vitamin in enumerate(VitaminNameData.vitamin_name):
+        for index, vitamin in enumerate(VitaminName.vitamin_name):
             self.create_intake_label(
-                vitamin, count+1, intake_frame, is_edit, chosen_diet)
+                vitamin, index+1, intake_frame, is_edit, chosen_diet)
 
     def create_meals_frame(self, new_diet_frame: ttk.Frame, is_edit: bool, chosen_diet: str):
-        """create the meals frame (i.e the tableview with the chosen food for each meal)
+        """Create the meals frame (i.e the tableview with the chosen food for each meal)
         Args:
             new_diet_frame - the frame of the Add_new_edit tab
             is_edit - true if in edit mode
@@ -97,15 +95,15 @@ class DietsTab():
         meals_frame.grid(row=0, column=3, sticky="nw", pady=10, padx=10)
         meals_frame.grid_propagate(False)
 
-        for count,meal in enumerate(lst_of_meals):
+        for index,meal in enumerate(consts.Meals):
             self.create_meal_tableview(
-                meal, count, meals_frame, is_edit, chosen_diet)
-
+                meal.value, index, meals_frame, is_edit, chosen_diet)
+ 
         delete_button = ttk.Button(meals_frame, text="Delete", command=lambda: delete.delete_item_from_list_box(self))
         delete_button.grid(row=4, column=2, sticky='n')
 
     def create_search_frame(self, new_diet_frame: ttk.Frame, is_edit: bool, chosen_diet: str):
-        """ create the search frame from add_new_diet tab
+        """Create the search frame from add_new_diet tab
         if in edit mode replace the "add new diet" button to "Done" button
         Args:
             new_diet_frame - the parent frame
@@ -169,7 +167,7 @@ class DietsTab():
                 new_diet_frame, False)).grid(row=1, column=1, pady=5, sticky="s")
 
     def create_optimal_frame(self, vitamin_frame: ttk.LabelFrame):
-        """create the frame of the optimal value, include: label of the optimal value
+        """Create the frame of the optimal value, include: label of the optimal value
         Args:
             vitamin_frame - parent of the optimal value frame
         """
@@ -179,7 +177,7 @@ class DietsTab():
             row=1, column=6, pady=5)
 
         row_count = 2
-        for vitamin in VitaminNameData.vitamin_name:
+        for vitamin in VitaminName.vitamin_name:
             if vitamin == "Sodium":
                 ttk.Label(optimal_values_frame, text="less than 2300 mg ").grid(
                     row=row_count, column=6, pady=6.5)
@@ -196,7 +194,7 @@ class DietsTab():
             row_count += 1
 
     def create_percentage_frame(self, vitamin_frame: ttk.LabelFrame, is_edit: bool, chosen_diet: str = ""):
-        """ create the frame of progress bar for all vitamins
+        """Create the frame of progress bar for all vitamins
         Args:
             vitamin_frame - parent of percentage frame
             is_edit - True if we on edit mode
@@ -209,7 +207,7 @@ class DietsTab():
         percentage_frame.grid_propagate(False)
 
         row_count = 1
-        for vitamin in VitaminNameData.vitamin_name:
+        for vitamin in VitaminName.vitamin_name:
             optimal_quantity = self.current_user.get_number_from_recommended(
                 vitamin)
             setattr(self, vitamin+"_pbar", ttkbootstrap.Floodgauge(percentage_frame, length=100,
@@ -226,11 +224,11 @@ class DietsTab():
             dict_intake = self.current_user.get_all_vitamin_values_from_diet(
                 chosen_diet)
         else:
-            dict_intake = dict.fromkeys(VitaminNameData.vitamin_name, 0)
+            dict_intake = dict.fromkeys(VitaminName.vitamin_name, 0)
         update.set_intake_widgets(self, dict_intake)
 
     def create_meal_tableview(self, meal: str, grid_row_start: int, meals_frame: ttk.LabelFrame, is_edit: bool, chosen_diet: str):
-        """create the frame and tableview of meal data in add_new_frame and edit-diets, 
+        """Create the frame and tableview of meal data in add_new_frame and edit-diets, 
         if in edit mode set all the foods from chosen_diet otherwise it's empty
         Args:
             meal - current meal
@@ -275,7 +273,7 @@ class DietsTab():
         current_meal_tableview.load_table_data()
 
     def create_intake_label(self, vitamin: str, row_count: int, intake_frame: ttk.Frame, is_edit: bool, chosen_diet: str):
-        """set labels of vitamin intake to 0 ot the saved value
+        """Set labels of vitamin intake to 0 ot the saved value
         Args:
             vitamin - the vitamin we create it's label
             row_count - the row of current label
@@ -288,18 +286,18 @@ class DietsTab():
 
         if not is_edit:
             setattr(self, vitamin+"_intake_label",
-                    ttk.Label(intake_frame, text="0 "+VitaminNameData.units[vitamin]))
+                    ttk.Label(intake_frame, text="0 "+VitaminName.units[vitamin]))
         else:  # in edit mode get the saved value
             value = self.current_user.get_vitamin_value_from_diet(
                 chosen_diet, vitamin)
             setattr(self, vitamin+"_intake_label",
-                    ttk.Label(intake_frame, text=str(round(value, 2))+" "+VitaminNameData.units[vitamin]))
+                    ttk.Label(intake_frame, text=str(round(value, 2))+" "+VitaminName.units[vitamin]))
 
         getattr(self, vitamin+"_intake_label").grid(row=row_count,
                                                          column=5, pady=6.49)
 
     def create_all_diets_tab(self, all_diet_frame: ttk.Frame):
-        """ create all the diets tab (diets listbox and all the button)
+        """Create all the diets tab (diets listbox and all the button)
         Args:
             all_diet_frame - current frame
         """
@@ -333,7 +331,7 @@ class DietsTab():
             self)).grid(row=1, column=4, padx=10, pady=10)
 
     def edit_diet(self, chosen_diet: str, all_diet_frame: ttk.Frame):
-        """ show the edit diet frame, which identical to the add_new_diet but all the diet data is  shown
+        """Show the edit diet frame, which identical to the add_new_diet but all the diet data is  shown
         Args:
             chosen_diet -  the diet the user wanted to edit
             all_diet_frame - the current frame
@@ -347,7 +345,7 @@ class DietsTab():
         self.create_vitamin_frame(all_diet_frame, True, chosen_diet)
 
     def back_to_diets(self, new_diet_frame: ttk.Frame, is_analysis: bool):
-        """ function used after editing an existing diet or analysis of a diet
+        """Function used after editing an existing diet or analysis of a diet
         return to all diet tab
         Args:
             new_diet_frame - the current frame
@@ -362,7 +360,7 @@ class DietsTab():
         self.create_all_diets_tab(new_diet_frame)
 
     def create_analysis_diet(self, chosen_diet: str, all_diet_frame: ttk.Frame):
-        """show the analysis of the chosen_diet
+        """Show the analysis of the chosen_diet
         Args:
             chosen_diet -  the diet the user wanted to show
             all_diet_frame - current frame
@@ -375,21 +373,21 @@ class DietsTab():
 
         ttk.Label(analysis_diet_frame, text="Analysis " +
                   chosen_diet).grid(row=1, column=0, pady=10, padx=30, sticky='ns')
-        ttk.Label(analysis_diet_frame, text="choose your vitamin").grid(
+        ttk.Label(analysis_diet_frame, text="Choose your vitamin").grid(
             row=2, column=0, pady=10, padx=30, sticky='ns')
 
         analysis_listbox = tk.Listbox(
             analysis_diet_frame, width=50, height=35)
         analysis_listbox.grid(row=3, columns=1)
 
-        for vitamin in VitaminNameData.vitamin_name:
+        for vitamin in VitaminName.vitamin_name:
             analysis_listbox.insert(END, vitamin)
 
-        self.analysis_vitamin_pei_frame = ttk.Labelframe(
+        self.analysis_vitamin_pie_frame = ttk.Labelframe(
             all_diet_frame, width=2000, height=50)
-        self.analysis_vitamin_pei_frame.grid(row=0, column=2, padx=15)
+        self.analysis_vitamin_pie_frame.grid(row=0, column=2, padx=15)
 
-        ttk.Label(self.analysis_vitamin_pei_frame,
+        ttk.Label(self.analysis_vitamin_pie_frame,
                   text="Your Analysis data ").grid(row=0, column=2)
 
         self.analysis_vitamin_meal_frame = ttk.Frame(

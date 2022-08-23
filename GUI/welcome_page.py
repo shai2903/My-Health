@@ -4,16 +4,17 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import ttkbootstrap
 import check_fields as check_fields
-import error
-import handler_collection
+import error_validate 
+import handler_mongoDB
 from user import User
 import start_app
 import helper
 import handler_mail
+import consts
 
 
 class WelcomePage(tk.Frame):
-    """ WelcomePage class, create the welcome page with login and signup options for user to 
+    """WelcomePage class, create the welcome page with login and signup options for user to
     enter their account or sign up.
 
     Attributes:
@@ -28,7 +29,7 @@ class WelcomePage(tk.Frame):
         self.parent_frame = parent_frame
         self.controller = controller
 
-        padding_left_frame = ttk.Frame(self, width=50, height=200)
+        padding_left_frame = ttk.Frame(self, width=40, height=200)
         padding_left_frame.grid(row=0, column=0)
         ttk.Label(self, text="Welcome", style="Welcome.TLabel").grid(
             row=0, column=2, pady=5)
@@ -41,11 +42,11 @@ class WelcomePage(tk.Frame):
         self.create_forgot_password_frame()
 
     def create_forgot_password_frame(self):
-        """create the forgot password frame"""
+        """Create the forgot password frame"""
 
         self.forgot_password_frame = ttk.Labelframe(self, width=300)
         self.forgot_password_frame.grid(row=1, column=1, padx=10, sticky='s')
-        ttk.Label(self.forgot_password_frame, text="Forgot password", style="login.TLabel").grid(
+        ttk.Label(self.forgot_password_frame, text="Forgot Your Password ?", style="login.TLabel").grid(
             row=1, column=1)
 
         ttk.Label(self.forgot_password_frame, text="Username : ").grid(
@@ -66,40 +67,38 @@ class WelcomePage(tk.Frame):
             mail_entry.get(), username_entry.get(), error_label), text="Ok").grid(row=4, column=1, pady=10)
 
     def send_reset_password(self, mail: str, username: str, label: tk.Label):
-        """create the frame of 'forgot password'"""
-        if not handler_collection.is_username_exists(username):
-            label['text'] = "Username doesn't exist"
+        """Create the frame of 'forgot password' """
+        if not handler_mongoDB.is_username_exists(username):
+            label['text'] = consts.ERROR_USER_NOT_FOUND
             return
 
         try:
             check_fields.check_mail_user(username, mail)
-        except error.ValidationError as exception:
-
+        except error_validate.MailValidationError as exception:
             label['text'] = str(exception)
             return
 
         try:
             password = handler_mail.send_mail_reset(mail, username)
             password_hashed_new = helper.make_password_hashed(password)
-            handler_collection.update_password(
-                handler_collection.get_user(username), password_hashed_new)
-
+            handler_mongoDB.update_password(
+                handler_mongoDB.get_user(username), password_hashed_new)
+            label['text'] = consts.PASSWORD_SENT
         except:
-            label['text'] = "couldn't send mail"
-            return
+            label['text'] = consts.ERROR_SEND_MAIL
 
-        label['text'] = "New password sent to your mail"
+       
 
     def create_login_frame(self):
-        """create the login frame"""
+        """Create the login frame"""
 
         self.login_frame = ttk.Labelframe(self, width=300)
         self.login_frame.grid(row=1, column=1, padx=10, sticky='n')
 
-        ttk.Label(self.login_frame, text="Login", style="login.TLabel").grid(
+        ttk.Label(self.login_frame, text="Log in", style="login.TLabel").grid(
             row=1, column=1, pady=5)
 
-        ttk.Label(self.login_frame, text="User name : ").grid(
+        ttk.Label(self.login_frame, text="Username : ").grid(
             row=2, column=1, padx=5)
         login_username_entry = ttk.Entry(self.login_frame, width=20)
         login_username_entry.grid(row=2, column=2, padx=15, pady=5)
@@ -112,17 +111,17 @@ class WelcomePage(tk.Frame):
             login_username_entry.get(), login_password_entry.get())).grid(row=4, column=2, pady=10)
 
     def from_login_to_tab_creator(self, username: str, password: str):
-        """show the user's app if the username and password are valid
+        """Show the user's app if the username and password are valid
         Args:
             username - the username the user enter
             password - the password the user enter
         """
         try:
             check_fields.check_empty_fields(username, password)
-            self.user = handler_collection.search_user_collection(
+            self.user = handler_mongoDB.search_user_collection(
                 username, password)
 
-        except error.ValidationError as exception:
+        except error_validate.UserPassValidationError as exception:
             self.label_error(self.login_frame, 5, 2, str(exception))
             return
 
@@ -130,13 +129,13 @@ class WelcomePage(tk.Frame):
         self.show_tab_creator()
 
     def create_signup_frame(self):
-        """create the signup frame"""
+        """Create the signup frame"""
         self.signup_frame = ttk.Labelframe(self, width=300, height=200)
         self.signup_frame.grid(row=1, column=3)
-        ttk.Label(self.signup_frame, text="Sign up ").grid(
+        ttk.Label(self.signup_frame, text="Sign Up ").grid(
             row=1, column=3, pady=20)
 
-        ttk.Label(self.signup_frame, text="User name :").grid(row=2, column=3)
+        ttk.Label(self.signup_frame, text="Username :").grid(row=2, column=3)
         signup_username_entry = ttk.Entry(self.signup_frame, width=20)
         signup_username_entry.grid(row=2, column=4, padx=15, pady=5)
 
@@ -144,7 +143,7 @@ class WelcomePage(tk.Frame):
         signup_pass_entry = ttk.Entry(self.signup_frame, width=20, show="*")
         signup_pass_entry.grid(row=3, column=4, padx=15, pady=5)
 
-        ttk.Label(self.signup_frame, text="Repeat password :").grid(
+        ttk.Label(self.signup_frame, text="Repeat Password :").grid(
             row=4, column=3)
         signup_rep_password_entry = ttk.Entry(
             self.signup_frame, width=20, show="*")
@@ -169,7 +168,7 @@ class WelcomePage(tk.Frame):
         ), signup_rep_password_entry.get(), signup_mail_entry.get(), signup_date_entry.entry.get(), gender_combobox.get())).grid(row=8, column=4, pady=25)
 
     def from_signup_to_tab_creator(self, username: str, password: str, rep_password: str, mail: str, birthday: str, gender: str):
-        """from signup to tab_creator, adding the new user data to collection and create a local user
+        """From signup to tab_creator, adding the new user data to collection and create a local user
         Args:
             username - the username the user enter
             password - the password the user enter
@@ -181,7 +180,7 @@ class WelcomePage(tk.Frame):
         try:
             self.validation_details_signup(
                 username, password, rep_password, mail, gender, birthday)
-        except error.ValidationError as exception:
+        except error_validate.ValidationError as exception:
             self.label_error(self.signup_frame, 9, 4, str(exception))
             return
 
@@ -190,11 +189,11 @@ class WelcomePage(tk.Frame):
         birthday_datetime = helper.convert_datetime(birthday)
         self.user = User(username, mail, password_hashed,
                          gender_bool, birthday_datetime)
-        handler_collection.add_to_collection(self.user)
+        handler_mongoDB.add_to_collection(self.user)
         self.show_tab_creator()
 
     def validation_details_signup(self, username: str, password: str, password_repeat: str, mail: str, gender: str, birthday: str):
-        """validation all the fields the user enter
+        """Validation all the fields the user enter
         Args:
             username - the username the user enter
             password - the password the user enter
@@ -210,11 +209,11 @@ class WelcomePage(tk.Frame):
             check_fields.check_birthday(birthday)
             check_fields.check_gender(gender)
 
-        except error.ValidationError as exception:
-            raise error.ValidationError(str(exception))
+        except error_validate.ValidationError as exception:
+            raise exception
 
     def label_error(self, frame: tk.Frame, row: int, column: int, error_str: str):
-        """ make a label for the error in login\signup
+        """Make a label for the error in log in or signup
         Args:
             frame - the frame of the label
             row - row of the label
@@ -225,5 +224,5 @@ class WelcomePage(tk.Frame):
                   style="error.login.TLabel").grid(row=row, column=column, sticky="ew")
 
     def show_tab_creator(self):
-        """show the TabCreator frame"""
-        self.controller.switch_frames(self.parent_frame, "TabCreator", self)
+        """Show the TabCreator frame"""
+        self.controller.switch_frames(self.parent_frame, "TabCreator", self.user)

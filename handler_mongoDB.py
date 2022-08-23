@@ -1,7 +1,8 @@
 from pymongo import MongoClient
 import bson
 import helper
-import error
+import error_validate
+import consts
 from user import User
 from diet import Diet
 
@@ -10,19 +11,20 @@ collection = connection.Main_Database.Users
 
 
 def search_user_collection(username: str, password: str) -> User:
-    """search the user in collection to check it's an existing user, if exist import to self.user
+    """Search the user in collection to check it's an existing user, if exist import to self.user
     Args:
         username - the username the user enter
         password - the password the user enter
     """
     user_doc = collection.find_one({"user": username})
     if not user_doc:  # user doesn't exist
-        raise error.ValidationError("Username doesn't exist")
+        raise error_validate.UserPassValidationError(consts.ERROR_USER_NOT_FOUND)
 
     try:
         helper.verify_password(password, user_doc["password"])
-    except error.ValidationError as exc:
-        raise error.ValidationError("Wrong password") from exc
+    except error_validate.UserPassValidationError as exc:
+        exc.str=consts.ERROR_WRONG_PASS
+        raise exc
 
     user = User(user_doc["user"], user_doc["mail"], user_doc["password"],
                 user_doc["gender"], user_doc["birthday"], user_doc["num_of_diets"])
@@ -32,7 +34,7 @@ def search_user_collection(username: str, password: str) -> User:
 
 
 def add_to_collection(user: User):
-    """add the user data to collection"""
+    """Add the user data to collection"""
     item = {
         "_id": bson.objectid.ObjectId(),
         "user": user.username,
@@ -47,38 +49,38 @@ def add_to_collection(user: User):
 
 
 def is_username_exists(username: str) -> bool:
-    """check if username exists in collection, return True if it is ,otherwise False"""
-    my_doc = collection.find_one({"user": username})
+    """Check if username exists in collection, return True if it is ,otherwise False"""
+    user_doc = collection.find_one({"user": username})
 
     # username already exist
-    if my_doc:
+    if user_doc:
         return True
     return False
 
 
 def is_mail_exists(mail: str) -> bool:
-    """check if mail exists in collection, return True if it is ,otherwise False"""
-    my_doc = collection.find_one({"mail": mail})
+    """Check if mail exists in collection, return True if it is ,otherwise False"""
+    user_doc = collection.find_one({"mail": mail})
 
     # mail already exist
-    if my_doc:
+    if user_doc:
         return True
     return False
 
 
 def get_user(username: str):
-    """return user from collection"""
+    """Return user from collection"""
     return collection.find_one({"user": username})
 
 
 def get_mail(username: str):
-    """return username's mail from collection"""
+    """Return username's mail from collection"""
     user_doc = collection.find_one({"user": username})
     return user_doc["mail"]
 
 
 def delete_from_collection(user_collection: dict, diet_name: str):
-    """delete diet from collection"""
+    """Delete diet from collection"""
     collection.update_many({"_id": user_collection["_id"]}, {
         "$unset": {"diets."+diet_name: ""}})
     collection.update_many({"_id": user_collection["_id"]}, {
@@ -86,25 +88,25 @@ def delete_from_collection(user_collection: dict, diet_name: str):
 
 
 def update_username(user_collection: dict, username_new: str):
-    """update username in collection"""
+    """Update username in collection"""
     collection.update_many({"_id": user_collection["_id"]}, {
         "$set": {"user": username_new}})
 
 
 def update_password(user_collection: dict, password_new: str):
-    """update password in collection"""
+    """Update password in collection"""
     collection.update_many({"_id": user_collection["_id"]}, {
         "$set": {"password": password_new}})
 
 
 def update_mail(user_collection: dict, mail_new: str):
-    """update mail in collection"""
+    """Update mail in collection"""
     collection.update_many({"_id": user_collection["_id"]}, {
         "$set": {"mail": mail_new}})
 
 
 def update_diets(user_collection: dict, diet_name: str, is_edit: bool, current_diet: Diet):
-    """add diet to saved diets in collection (in edit mode we don't increase the counter of diets 
+    """Add diet to saved diets in collection (in edit mode we don't increase the counter of diets 
     because we changed an existing diet"""
 
     json_diet = helper.to_dict(current_diet)

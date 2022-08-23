@@ -7,7 +7,7 @@ from food import Food
 
 
 def delete_item_from_list_box(diet_tab: diets_tabs.DietsTab):
-    """delete item from meal, choose the right meal to delete from (delete only from one)
+    """Delete item from meal, choose the right meal to delete from (delete only from one)
     Args:
         diet_tab - the diet tab object of GUI
         item_lunch - the item we want to delete from lunch
@@ -34,8 +34,8 @@ def delete_item_from_list_box(diet_tab: diets_tabs.DietsTab):
         return
 
 
-def delete_from_meal(diet_tab: diets_tabs.DietsTab, item_to_del: str, meal: str):
-    """delete an item from specific table-view and from user object
+def delete_from_meal(diet_tab: diets_tabs.DietsTab, item_to_del: list, meal: str):
+    """Delete an item from specific table-view and from user object
     Args:
         diet_tab -the diet tab object of GUI
         item_to_del - the chosen food to delete
@@ -53,12 +53,12 @@ def delete_from_meal(diet_tab: diets_tabs.DietsTab, item_to_del: str, meal: str)
 
     # update vitamin frame
     vitamin_intake = update.calculate_intake(diet_tab, food_obj.get_vitamins(),
-                                                  food_obj.get_serving(), food_obj.get_amount(), True)
+                                                  food_obj.get_serving(), food_obj.get_amount(), is_delete=True)
     update.set_intake_widgets(diet_tab, vitamin_intake)
 
 
 def delete_diet(diet_tab: diets_tabs.DietsTab):
-    """delete diet name from all diets listbox, collection and local user"""
+    """Delete diet name from all diets listbox, collection and local user"""
     diet_name = diet_tab.all_diets_listbox.get(tk.ANCHOR)
     diet_tab.current_user.delete_diet(diet_name)
 
