@@ -180,7 +180,7 @@ class DietsTab():
         optimal_values_frame = ttk.Frame(vitamin_frame)
         optimal_values_frame.grid(row=0, column=6, sticky='w')
         ttk.Label(optimal_values_frame, text="Optimal value").grid(
-            row=1, column=6, pady=5)
+            row=1, column=6, pady=15)
 
         row_count = 2
         for vitamin in VitaminName.vitamin_name:
