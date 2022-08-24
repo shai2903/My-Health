@@ -74,4 +74,4 @@ ERROR_UNIQUE_DIET = "Enter unique diet name"
 PASSWORD_SENT = "New password sent to your mail"
 
 # USDA KEY
-key_from_USDA = "Idd4pw784uoM2XfIhNmIyxsfwKv6xLdUBnIUz99m"
+key_from_USDA = ""
