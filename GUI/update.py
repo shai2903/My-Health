@@ -4,6 +4,8 @@ import reset_fields
 import helper
 import diets_tabs
 from consts import GREEN_PERCENTAGE,RED_PERCENTAGE
+from errors import USDAConnectionError
+from tkinter import messagebox
 from vitamin_data.vitamin_names import VitaminName
 
 
@@ -17,7 +19,12 @@ def add_food(diet_tab: diets_tabs.DietsTab):
     serving=diet_tab.serving_combobox.get() #the serving of food
     amount=diet_tab.amount_entry.get() # the amount of serving from food
     food_id = diet_tab.from_description_to_fcdif[food]
-    current_food_nutrient = handler_USDA.get_food_nutrient(str(food_id))
+    
+    try:
+        current_food_nutrient = handler_USDA.get_food_nutrient(str(food_id))
+    except USDAConnectionError:
+        messagebox.showerror("showerror", "USDA bad connection")
+        return
 
     current_meal_tableview = getattr(diet_tab, "tableview_"+meal)
     current_meal_tableview.insert_row(

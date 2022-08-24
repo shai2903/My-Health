@@ -1,7 +1,7 @@
 import json
 import bcrypt
 from consts import REGEX_FIND_GR,REGEX_FIND_FLOAT
-from error_validate import UserPassValidationError
+from errors import UserPassValidationError
 from datetime import datetime, date
 
 def is_empty(my_str: str) -> bool:

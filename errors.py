@@ -20,3 +20,6 @@ class UserPassValidationError(ValidationError):
 
 class DietValidationError(ValidationError):
     pass
+
+class USDAConnectionError(Exception):
+    pass

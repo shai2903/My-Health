@@ -1,7 +1,8 @@
 from __future__ import annotations
 import handler_USDA
 import diets_tabs
-
+from tkinter import messagebox
+from errors import USDAConnectionError
 
 def show_serving(diet_tab: diets_tabs.DietsTab):
     """Show all the serving option after food search
@@ -12,7 +13,11 @@ def show_serving(diet_tab: diets_tabs.DietsTab):
     food=diet_tab.food_options_combobox.get() #the food we search
     serving_combobox=diet_tab.serving_combobox
     food_id = diet_tab.from_description_to_fcdif[food]
-    optional_serving_list: list = handler_USDA.get_serving_option(str(food_id))
+    try:
+        optional_serving_list: list = handler_USDA.get_serving_option(str(food_id))
+    except USDAConnectionError:
+        messagebox.showerror("showerror", "USDA bad connection")
+        return
 
     values_to_add = tuple(optional_serving_list)
     serving_combobox['values'] = values_to_add

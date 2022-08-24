@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 import bson
 import helper
-from error_validate import UserPassValidationError
+from errors import UserPassValidationError
 from consts import ERROR_USER_NOT_FOUND, ERROR_WRONG_PASS
 from user import User
 from diet import Diet

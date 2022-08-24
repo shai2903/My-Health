@@ -4,7 +4,7 @@ import tkinter as tk
 import reset_fields
 import diets_tabs
 import check_fields
-from error_validate import DietValidationError
+from errors import DietValidationError
 
 
 def add_new_diet(diet_tab: diets_tabs.DietsTab, error_label: tk.Label):

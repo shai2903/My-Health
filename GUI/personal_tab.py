@@ -1,7 +1,7 @@
 from __future__ import annotations
 import tkinter.ttk as ttk
 import check_fields
-from error_validate import MailValidationError, UserPassValidationError
+from errors import MailValidationError, UserPassValidationError
 from current_user import CurrentUser
 
 

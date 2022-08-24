@@ -5,7 +5,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import ttkbootstrap
 import check_fields as check_fields
-from error_validate import MailValidationError,UserPassValidationError,ValidationError
+from errors import MailValidationError,UserPassValidationError,ValidationError
 import handler_mongoDB
 from user import User
 import start_app

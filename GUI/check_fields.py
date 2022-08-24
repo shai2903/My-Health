@@ -1,11 +1,11 @@
-from error_validate import GenderValidationError, BirthdayValidationError, MailValidationError, UserPassValidationError, DietValidationError
-import consts
-import handler_mongoDB
 from datetime import datetime
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import helper
+from errors import GenderValidationError, BirthdayValidationError, MailValidationError, UserPassValidationError, DietValidationError
+import consts
+import handler_mongoDB
 
 def check_empty_fields(username: str, password: str):
     """Check the fields the user filled aren't empty
