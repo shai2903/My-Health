@@ -1,7 +1,7 @@
 import json
 import bcrypt
-import error_validate
-import consts
+from consts import REGEX_FIND_GR,REGEX_FIND_FLOAT
+from error_validate import UserPassValidationError
 from datetime import datetime, date
 
 def is_empty(my_str: str) -> bool:
@@ -29,7 +29,7 @@ def verify_password(password: str, collection_password: str):
     password_encoded = password.encode('utf-8')
     # verify the password with the collection
     if not bcrypt.checkpw(password_encoded, collection_password):
-        raise error_validate.UserPassValidationError()
+        raise UserPassValidationError()
 
 
 def make_password_hashed(password: str) -> str:
@@ -47,8 +47,8 @@ def convert_datetime(birthday: str) -> datetime:
 def get_ratio(serving: str) -> float:
     """Get the serving in gram from the serving str and calculate the ratio from 100"""
     
-    serving_in_grams= consts.REGEX_FIND_GR.findall(serving)
-    serving_in_grams_num=float(consts.REGEX_FIND_FLOAT.findall(serving_in_grams[0])[0]) # get serving in grams (example: 1 cup is x gram)
+    serving_in_grams= REGEX_FIND_GR.findall(serving)
+    serving_in_grams_num=float(REGEX_FIND_FLOAT.findall(serving_in_grams[0])[0]) # get serving in grams (example: 1 cup is x gram)
 
     return serving_in_grams_num/100
 

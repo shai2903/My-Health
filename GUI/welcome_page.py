@@ -1,10 +1,11 @@
 from __future__ import annotations
+from distutils.log import error
 from pickle import NONE
 import tkinter as tk
 import tkinter.ttk as ttk
 import ttkbootstrap
 import check_fields as check_fields
-import error_validate 
+from error_validate import MailValidationError,UserPassValidationError,ValidationError
 import handler_mongoDB
 from user import User
 import start_app
@@ -29,8 +30,6 @@ class WelcomePage(tk.Frame):
         self.parent_frame = parent_frame
         self.controller = controller
 
-        padding_left_frame = ttk.Frame(self, width=40, height=200)
-        padding_left_frame.grid(row=0, column=0)
         ttk.Label(self, text="Welcome", style="Welcome.TLabel").grid(
             row=0, column=2, pady=5)
 
@@ -44,7 +43,7 @@ class WelcomePage(tk.Frame):
     def create_forgot_password_frame(self):
         """Create the forgot password frame"""
 
-        self.forgot_password_frame = ttk.Labelframe(self, width=300)
+        self.forgot_password_frame = ttk.Labelframe(self)
         self.forgot_password_frame.grid(row=1, column=1, padx=10, sticky='s')
         ttk.Label(self.forgot_password_frame, text="Forgot Your Password ?", style="login.TLabel").grid(
             row=1, column=1)
@@ -67,14 +66,14 @@ class WelcomePage(tk.Frame):
             mail_entry.get(), username_entry.get(), error_label), text="Ok").grid(row=4, column=1, pady=10)
 
     def send_reset_password(self, mail: str, username: str, label: tk.Label):
-        """Create the frame of 'forgot password' """
+        """Send a new password to user's mail """
         if not handler_mongoDB.is_username_exists(username):
             label['text'] = consts.ERROR_USER_NOT_FOUND
             return
 
         try:
             check_fields.check_mail_user(username, mail)
-        except error_validate.MailValidationError as exception:
+        except MailValidationError as exception:
             label['text'] = str(exception)
             return
 
@@ -87,12 +86,10 @@ class WelcomePage(tk.Frame):
         except:
             label['text'] = consts.ERROR_SEND_MAIL
 
-       
-
     def create_login_frame(self):
         """Create the login frame"""
 
-        self.login_frame = ttk.Labelframe(self, width=300)
+        self.login_frame = ttk.Labelframe(self)
         self.login_frame.grid(row=1, column=1, padx=10, sticky='n')
 
         ttk.Label(self.login_frame, text="Log in", style="login.TLabel").grid(
@@ -121,7 +118,7 @@ class WelcomePage(tk.Frame):
             self.user = handler_mongoDB.search_user_collection(
                 username, password)
 
-        except error_validate.UserPassValidationError as exception:
+        except UserPassValidationError as exception:
             self.label_error(self.login_frame, 5, 2, str(exception))
             return
 
@@ -130,7 +127,7 @@ class WelcomePage(tk.Frame):
 
     def create_signup_frame(self):
         """Create the signup frame"""
-        self.signup_frame = ttk.Labelframe(self, width=300, height=200)
+        self.signup_frame = ttk.Labelframe(self)
         self.signup_frame.grid(row=1, column=3)
         ttk.Label(self.signup_frame, text="Sign Up ").grid(
             row=1, column=3, pady=20)
@@ -180,7 +177,7 @@ class WelcomePage(tk.Frame):
         try:
             self.validation_details_signup(
                 username, password, rep_password, mail, gender, birthday)
-        except error_validate.ValidationError as exception:
+        except ValidationError as exception:
             self.label_error(self.signup_frame, 9, 4, str(exception))
             return
 
@@ -209,7 +206,7 @@ class WelcomePage(tk.Frame):
             check_fields.check_birthday(birthday)
             check_fields.check_gender(gender)
 
-        except error_validate.ValidationError as exception:
+        except ValidationError as exception:
             raise exception
 
     def label_error(self, frame: tk.Frame, row: int, column: int, error_str: str):
@@ -225,4 +222,5 @@ class WelcomePage(tk.Frame):
 
     def show_tab_creator(self):
         """Show the TabCreator frame"""
-        self.controller.switch_frames(self.parent_frame, "TabCreator", self.user)
+        self.controller.switch_frames(
+            self.parent_frame, "TabCreator", self.user)

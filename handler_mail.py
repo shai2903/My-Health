@@ -6,7 +6,6 @@ import random
 import consts
 
 
-
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits) -> str:
     """Create new random str"""
     return ''.join(random.choice(chars) for _ in range(size))
@@ -40,8 +39,7 @@ def send_mail_reset(mail: str, username: str):
     part2 = MIMEText(txt, 'html')
     msg.attach(part2)
 
-    # Send the message via our own SMTP server, but don't include the
-    # envelope header.
+    # Send the message via SMTP server
     server = smtplib.SMTP(consts.SMTP_SERVER, 587)
     server.ehlo()
     server.starttls()

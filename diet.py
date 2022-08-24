@@ -6,8 +6,8 @@ class Diet:
     """Diet class represent a diet of user.
 
     Attributes:
-        meals - dict with key as the lunch\breakfast\dinner\snacks and value is a meal object  
-        vitamins - dict with all the vitamins data for all meals in diet     
+        meals - dict with key as the meal name and value is a meal object 
+        vitamins - dict with all the vitamins data for all meals in diet    
     """
 
     def __init__(self, dict_diet: dict, is_dict_json: bool):

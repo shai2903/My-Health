@@ -1,0 +1,6 @@
+matplotlib==3.5.2
+pandas==1.4.2
+pymongo==4.1.1
+python_bcrypt==0.3.2
+requests==2.27.1
+ttkbootstrap==1.8.0

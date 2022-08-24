@@ -2,6 +2,7 @@ from __future__ import annotations
 import tkinter as tk
 import update
 import diets_tabs
+from consts import Meals
 from meal import Meal
 from food import Food
 
@@ -21,16 +22,16 @@ def delete_item_from_list_box(diet_tab: diets_tabs.DietsTab):
     item_dinner=diet_tab.tableview_snacks.view.selection()
     
     if item_lunch:
-        delete_from_meal(diet_tab, item_lunch, "lunch")
+        delete_from_meal(diet_tab, item_lunch, Meals.LUNCH)
         return
     if item_breakfast:
-        delete_from_meal(diet_tab, item_breakfast, "breakfast")
+        delete_from_meal(diet_tab, item_breakfast, Meals.BREAKFAST)
         return
     if item_snacks:
-        delete_from_meal(diet_tab, item_snacks, "snacks")
+        delete_from_meal(diet_tab, item_snacks, Meals.SNACKS)
         return
     if item_dinner:
-        delete_from_meal(diet_tab, item_dinner, "dinner")
+        delete_from_meal(diet_tab, item_dinner,  Meals.DINNER)
         return
 
 

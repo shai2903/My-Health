@@ -7,6 +7,7 @@ from diets_tabs import DietsTab
 from personal_tab import PersonalTab
 from user import User
 
+
 class TabPage(tk.Frame):
 
     def __init__(self, parent_frame: tk.Frame, user: User, controller: start_app.StartApp):
@@ -26,21 +27,19 @@ class TabPage(tk.Frame):
 
     def create_tabs(self):
         """Create all the tabs and their frames"""
-        control_tab = ttk.Notebook(
-            self, style='lefttab.TNoteboOk', width=2000, height=2000)
+        control_tab = ttk.Notebook(self, style='lefttab.TNoteboOk')
 
-        tab_new_diet_frame = ttk.Frame(control_tab, width=2000, height=2000)
+        tab_new_diet_frame = ttk.Frame(control_tab)
         tab_new_diet_frame.grid(row=1, column=0)
         diets_obj = DietsTab(self.current_user)
         diets_obj.create_new_diet_tab(tab_new_diet_frame)
 
-        tab_edit_personal_data_frame = ttk.Frame(
-            control_tab, width=900, height=2000)
+        tab_edit_personal_data_frame = ttk.Frame(control_tab)
         tab_edit_personal_data_frame.grid(row=0, column=0)
         personal_obj = PersonalTab(self.current_user)
         personal_obj.create_personal_tab(tab_edit_personal_data_frame)
 
-        tab_all_diets_frame = ttk.Frame(control_tab, width=900, height=2000)
+        tab_all_diets_frame = ttk.Frame(control_tab)
         tab_all_diets_frame.grid(row=2, column=0)
         diets_obj.create_all_diets_tab(tab_all_diets_frame)
 

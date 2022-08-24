@@ -1,5 +1,6 @@
 from __future__ import annotations
 import tkinter as tk
+import os
 from tkinter import FLAT
 from ttkbootstrap import Style
 import welcome_page
@@ -15,7 +16,8 @@ class StartApp(tk.Tk):
 
         container = tk.Frame(self)
         self.title("My-Health")
-        self.iconbitmap("GUI\Icon.ico")  # set the icon of window
+        path_to_icon=os.path.abspath(os.path.join(os.path.dirname(__file__), '..','GUI','Icon.ico'))
+        self.iconbitmap(path_to_icon)  # set the icon of window
         container.grid()
 
         self.set_style()

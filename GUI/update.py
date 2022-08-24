@@ -3,7 +3,7 @@ import handler_USDA
 import reset_fields
 import helper
 import diets_tabs
-import consts
+from consts import GREEN_PERCENTAGE,RED_PERCENTAGE
 from vitamin_data.vitamin_names import VitaminName
 
 
@@ -62,10 +62,10 @@ def set_intake_widgets(diet_tab: diets_tabs.DietsTab, intake_dict: dict):
         getattr(diet_tab, vitamin+"_intake_label").config(
             text=str(rounded_val)+" "+VitaminName.units[vitamin])
 
-        color = consts.GREEN_PERCENTAGE
+        color = GREEN_PERCENTAGE
         if optimal_quantity:
             if intake_value > optimal_quantity:
-                color = consts.RED_PERCENTAGE
+                color = RED_PERCENTAGE
             getattr(diet_tab, vitamin +
                     "_pbar").configure(value=intake_value)
             getattr(diet_tab, vitamin+"pbar_label")['text'] = str(

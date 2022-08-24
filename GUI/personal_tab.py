@@ -1,7 +1,7 @@
 from __future__ import annotations
 import tkinter.ttk as ttk
 import check_fields
-import error_validate 
+from error_validate import MailValidationError, UserPassValidationError
 from current_user import CurrentUser
 
 
@@ -10,6 +10,7 @@ class PersonalTab():
     Attributes:
         current_user - the current user object
     """
+
     def __init__(self, current_user: CurrentUser):
         self.current_user = current_user
 
@@ -20,14 +21,12 @@ class PersonalTab():
         """
         edit_personal_data_frame.grid_propagate(False)
 
-        personal_change_frame = ttk.Labelframe(
-            edit_personal_data_frame, width=100, height=2000)
+        personal_change_frame = ttk.Labelframe(edit_personal_data_frame)
         personal_change_frame.grid(ipady=10, ipadx=10, sticky='ew')
         ttk.Label(personal_change_frame, text="Edit Your Profile").grid(
             row=1, column=1, pady=10, padx=30)
 
-        mail_change_frame = ttk.Labelframe(
-            edit_personal_data_frame, width=100, height=2000)
+        mail_change_frame = ttk.Labelframe(edit_personal_data_frame)
         mail_change_frame.grid(row=2, ipady=10, ipadx=10, sticky='ew')
         ttk.Label(mail_change_frame, text="New mail :").grid(
             row=2, column=1, pady=10)
@@ -36,16 +35,17 @@ class PersonalTab():
         ttk.Button(mail_change_frame, text="Ok", command=lambda: self.change_mail(mail_change_frame,
                                                                                   mail_entry.get())).grid(row=3, column=2, pady=10)
 
-        password_change_frame = ttk.Labelframe(
-            edit_personal_data_frame, width=100, height=2000)
+        password_change_frame = ttk.Labelframe(edit_personal_data_frame)
         password_change_frame.grid(row=3, ipady=10, ipadx=10, sticky='ew')
         ttk.Label(password_change_frame, text="Old Password :").grid(
             row=3, column=1, pady=10)
-        old_password_entry = ttk.Entry(password_change_frame, width=15, show="*")
+        old_password_entry = ttk.Entry(
+            password_change_frame, width=15, show="*")
         old_password_entry.grid(row=3, column=2)
         ttk.Label(password_change_frame, text="New Password :").grid(
             row=4, column=1, pady=10)
-        new_password_entry = ttk.Entry(password_change_frame, width=15, show="*")
+        new_password_entry = ttk.Entry(
+            password_change_frame, width=15, show="*")
         new_password_entry.grid(row=4, column=2)
         ttk.Label(password_change_frame, text="Repeat New Password :").grid(
             row=5, column=1, pady=10)
@@ -70,7 +70,7 @@ class PersonalTab():
         try:
             check_fields.check_changed_password(
                 password_new, password_old, password_repeat, self.current_user.get_password())
-        except error_validate.UserPassValidationError as exception:
+        except UserPassValidationError as exception:
             self.label_change(password_change_frame, str(exception))
             return
 
@@ -87,7 +87,7 @@ class PersonalTab():
         try:
             check_fields.check_changed_mail(
                 mail_new, self.current_user.get_mail())
-        except error_validate.MailValidationError as exception:
+        except MailValidationError as exception:
             self.label_change(mail_frame, str(exception))
             return
 

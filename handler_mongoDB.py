@@ -1,8 +1,8 @@
 from pymongo import MongoClient
 import bson
 import helper
-import error_validate
-import consts
+from error_validate import UserPassValidationError
+from consts import ERROR_USER_NOT_FOUND, ERROR_WRONG_PASS
 from user import User
 from diet import Diet
 
@@ -18,12 +18,12 @@ def search_user_collection(username: str, password: str) -> User:
     """
     user_doc = collection.find_one({"user": username})
     if not user_doc:  # user doesn't exist
-        raise error_validate.UserPassValidationError(consts.ERROR_USER_NOT_FOUND)
+        raise UserPassValidationError(ERROR_USER_NOT_FOUND)
 
     try:
         helper.verify_password(password, user_doc["password"])
-    except error_validate.UserPassValidationError as exc:
-        exc.str=consts.ERROR_WRONG_PASS
+    except UserPassValidationError as exc:
+        exc.str = ERROR_WRONG_PASS
         raise exc
 
     user = User(user_doc["user"], user_doc["mail"], user_doc["password"],

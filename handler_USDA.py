@@ -5,7 +5,6 @@ from vitamin_data.optimal_values import OptimalData
 from vitamin_data.vitamin_names import VitaminName
 
 
-
 def get_all_options_USDA(food_name: str) -> list:
     """ Get all the food option from searching food_name in USDA.
         Args:
@@ -23,7 +22,9 @@ def get_serving_option(food_id: str) -> list:
     """
     api_response = json.loads(requests.get(
         f'https://api.nal.usda.gov/fdc/v1/food/{food_id}?api_key={consts.key_from_USDA}').text)
+    print(api_response)
     api_serving = api_response['foodPortions']
+
     serving_options = []
 
     for serving_info in api_serving:
@@ -44,11 +45,13 @@ def get_food_nutrient(food_id: str) -> dict:
     api_response = json.loads(requests.get(
         f'https://api.nal.usda.gov/fdc/v1/food/{food_id}?api_key={consts.key_from_USDA}').text)
 
+    print(api_response)
     api_nutrients = api_response['foodNutrients']
 
     for nutrients in api_nutrients:
         if 'nutrient' in nutrients and 'name' in nutrients['nutrient']:
-            index = is_in_selected_vitamins(nutrients['nutrient']['name'].lower())
+            index = is_in_selected_vitamins(
+                nutrients['nutrient']['name'].lower())
             if index >= 0 and 'amount' in nutrients:
                 official_name = VitaminName.vitamin_name[index]
                 vitamins_nutrient[official_name] += round(

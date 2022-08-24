@@ -3,7 +3,6 @@ from diet import Diet
 from datetime import datetime
 
 
-
 class User:
     """User class represent a user.
 

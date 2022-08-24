@@ -85,13 +85,13 @@ def build_pie(diet_tab: diets_tabs.DietsTab, vitamin_values: list, chart_frame: 
     snacks_text_button=consts.Meals.SNACKS
 
     ttk.Button(meals_legend_frame, text=breakfast_text_button.capitalize(), bootstyle="success", command=lambda: show_meal_analysis_frame(
-        "breakfast", vitamin, chosen_diet, diet_tab)).grid(row=3, column=0, padx=20, pady=10)
+        breakfast_text_button, vitamin, chosen_diet, diet_tab)).grid(row=3, column=0, padx=20, pady=10)
     ttk.Button(meals_legend_frame, text=lunch_text_button.capitalize(), bootstyle="info", command=lambda: show_meal_analysis_frame(
-        "lunch", vitamin, chosen_diet, diet_tab)).grid(row=3, column=1, padx=20, pady=10)
+        lunch_text_button, vitamin, chosen_diet, diet_tab)).grid(row=3, column=1, padx=20, pady=10)
     ttk.Button(meals_legend_frame, text=dinner_text_button.capitalize(), bootstyle="warning", command=lambda: show_meal_analysis_frame(
-        "dinner", vitamin, chosen_diet, diet_tab)).grid(row=3, column=2, padx=20, pady=10)
+        dinner_text_button, vitamin, chosen_diet, diet_tab)).grid(row=3, column=2, padx=20, pady=10)
     ttk.Button(meals_legend_frame, text=snacks_text_button.capitalize(), bootstyle="danger", command=lambda: show_meal_analysis_frame(
-        "snacks", vitamin, chosen_diet, diet_tab)).grid(row=3, column=3, padx=20, pady=10,)
+        snacks_text_button, vitamin, chosen_diet, diet_tab)).grid(row=3, column=3, padx=20, pady=10,)
 
 
 def show_meal_analysis_frame(meal: str, vitamin: str, chosen_diet: str, diet_tab: diets_tabs.DietsTab):

@@ -4,7 +4,8 @@ import tkinter as tk
 import reset_fields
 import diets_tabs
 import check_fields
-import error_validate 
+from error_validate import DietValidationError
+
 
 def add_new_diet(diet_tab: diets_tabs.DietsTab, error_label: tk.Label):
     """Add new diet to collection and update self.user with new diet,
@@ -13,7 +14,7 @@ def add_new_diet(diet_tab: diets_tabs.DietsTab, error_label: tk.Label):
         check_fields.check_diet_name(diet_tab.get_entry(
             "diet_name"), diet_tab.current_user.get_diets_name())
         error_label['text'] = ""
-    except error_validate.DietValidationError as exception:
+    except DietValidationError as exception:
         error_label['text'] = str(exception)
         return
 

@@ -6,7 +6,8 @@ from food import Food
 import helper
 import handler_USDA
 import handler_mongoDB
-import consts
+from consts import Meals, REGEX_FIND_FLOAT
+
 
 class CurrentUser:
     """Class that represent the user that use the app now.
@@ -21,11 +22,11 @@ class CurrentUser:
 
     def __init__(self, user: User):
 
-        self.user = user
+        self.user: User = user
         self.age: int = helper.calculate_age(self.user.birthday)
         self.custom_recommended_values: dict = handler_USDA.get_amount(
-            int(self.age), self.user.gender)  # recommend vitamin value according to USDA
-        self.current_diet = self.reset_diet()
+            int(self.age), self.user.gender)  # Recommend vitamin value according to USDA
+        self.current_diet: Diet = self.reset_diet()
         self.user_collection = handler_mongoDB.get_user(self.user.username)
 
     def reset_diet(self) -> Diet:
@@ -34,10 +35,10 @@ class CurrentUser:
         self.dinner_foods: Meal = Meal()
         self.lunch_foods: Meal = Meal()
         self.snacks_foods: Meal = Meal()
-        meals_dct = {}
-   
-        for enum_meal in consts.Meals:
-            meal=enum_meal.value
+        meals_dct: dict = {}
+
+        for enum_meal in Meals:
+            meal = enum_meal.value
             meals_dct[meal] = getattr(self, meal+"_foods")
         return Diet(meals_dct, False)
 
@@ -88,17 +89,18 @@ class CurrentUser:
         """Update password to password_new"""
         password_hashed_new = helper.make_password_hashed(password_new)
         self.user.set_password(password_hashed_new)
-        handler_mongoDB.update_password(self.user_collection, password_hashed_new)
+        handler_mongoDB.update_password(
+            self.user_collection, password_hashed_new)
 
     def update_diets(self, current_diet: Diet, diet_name: str, is_edit: bool):
         """Add diet to diets"""
         self.user.add_new_diet(current_diet, diet_name, is_edit)
         handler_mongoDB.update_diets(self.user_collection,
-                               diet_name, is_edit, current_diet)
+                                     diet_name, is_edit, current_diet)
 
     def get_number_from_recommended(self, vitamin: str) -> float:
         """Return the optimal amount of vitamin"""
-        return float(consts.REGEX_FIND_FLOAT.findall(self.custom_recommended_values[vitamin])[0].replace(',', ''))
+        return float(REGEX_FIND_FLOAT.findall(self.custom_recommended_values[vitamin])[0].replace(',', ''))
 
     def get_foods_from_meal_diet(self, chosen_diet: str, meal: str) -> list:
         """Get list of foods from meal in chosen_diet"""
@@ -129,6 +131,6 @@ class CurrentUser:
         """Return Meal object of meal"""
         return self.current_diet.get_meal(meal)
 
-    def set_current_diet(self,chosen_diet: str):
+    def set_current_diet(self, chosen_diet: str):
         """Set current diet to chosen_diet"""
         self.current_diet = self.user.get_diet(chosen_diet)

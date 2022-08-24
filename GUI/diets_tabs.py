@@ -12,7 +12,9 @@ import analysis_chart
 from vitamin_data.vitamin_names import VitaminName
 from current_user import CurrentUser
 from diet import Diet
-import consts
+from consts import Meals,GREEN_PERCENTAGE
+
+
 
 class DietsTab():
     """Class creating the tabs frame.
@@ -31,15 +33,15 @@ class DietsTab():
 
     def __init__(self, current_user: CurrentUser):
         self.current_user = current_user
-        self.food_name_entry=None
-        self.food_options_combobox=None
-        self.amount_entry=None
-        self.meal_combobox=None
-        self.analysis_vitamin_meal_frame=None
-        self.analysis_vitamin_pie_frame=None
-        self.all_diets_listbox=None
-        self.serving_combobox=None
-        self.diet_name_entry=None
+        self.food_name_entry = None
+        self.food_options_combobox = None
+        self.amount_entry = None
+        self.meal_combobox = None
+        self.analysis_vitamin_meal_frame = None
+        self.analysis_vitamin_pie_frame = None
+        self.all_diets_listbox = None
+        self.serving_combobox = None
+        self.diet_name_entry = None
 
     def create_new_diet_tab(self, new_diet_frame: ttk.Frame):
         """Create the new diet tab
@@ -91,16 +93,16 @@ class DietsTab():
             is_edit - true if in edit mode
             chosen_diet - the diet the user choose in edit mode
         """
-        meals_frame = ttk.LabelFrame(new_diet_frame, width=450, height=920)
+        meals_frame = ttk.LabelFrame(new_diet_frame)
         meals_frame.grid(row=0, column=3, sticky="nw", pady=10, padx=10)
-        meals_frame.grid_propagate(False)
 
-        for index,meal in enumerate(consts.Meals):
+        for index, meal in enumerate(Meals):
             self.create_meal_tableview(
                 meal.value, index, meals_frame, is_edit, chosen_diet)
- 
-        delete_button = ttk.Button(meals_frame, text="Delete", command=lambda: delete.delete_item_from_list_box(self))
-        delete_button.grid(row=4, column=2, sticky='n')
+
+        delete_button = ttk.Button(
+            meals_frame, text="Delete", command=lambda: delete.delete_item_from_list_box(self))
+        delete_button.grid(row=4, column=2, sticky='n', pady=10)
 
     def create_search_frame(self, new_diet_frame: ttk.Frame, is_edit: bool, chosen_diet: str):
         """Create the search frame from add_new_diet tab
@@ -110,7 +112,7 @@ class DietsTab():
             is_edit - true if in edit mode
             chosen_diet - the diet the user choose in edit mode
         """
-        search_frame = ttk.LabelFrame(new_diet_frame, width=450, height=900)
+        search_frame = ttk.LabelFrame(new_diet_frame)
         search_frame.grid(row=0, column=0, pady=10,
                           sticky='n', ipadx=10, padx=10)
 
@@ -123,7 +125,8 @@ class DietsTab():
 
         self.food_options_combobox = ttk.Combobox(search_frame, width=50)
         self.food_options_combobox.grid(row=3, column=1, pady=5)
-        search_button=ttk.Button(search_frame, text="Search", command=lambda: show.show_food_options(self))                                             
+        search_button = ttk.Button(
+            search_frame, text="Search", command=lambda: show.show_food_options(self))
         search_button.grid(row=2, column=1, pady=5, sticky='e')
 
         ttk.Label(search_frame, text="Serving").grid(row=5, column=0, pady=5)
@@ -145,12 +148,15 @@ class DietsTab():
                                         )
         self.meal_combobox.grid(row=8, column=1, pady=5)
 
-        ttk.Button(search_frame, text="Selcet", command=lambda: show.show_serving(self)).grid(row=4, column=1, pady=5)
-        ttk.Button(search_frame, text="Add food", command=lambda: update.add_food(self)).grid(row=9, column=1, pady=5, sticky="s")
+        ttk.Button(search_frame, text="Select", command=lambda: show.show_serving(
+            self)).grid(row=4, column=1, pady=5)
+        ttk.Button(search_frame, text="Add food", command=lambda: update.add_food(
+            self)).grid(row=9, column=1, pady=5, sticky="s")
 
         done_new_diet_frame = ttk.Labelframe(new_diet_frame)
         done_new_diet_frame.grid(row=0, column=0, padx=10)
-        ttk.Label(done_new_diet_frame, text="Diet name: ").grid(row=0, column=0)
+        ttk.Label(done_new_diet_frame, text="Diet name: ").grid(
+            row=0, column=0)
 
         self.diet_name_entry = ttk.Entry(done_new_diet_frame, width=30)
         self.diet_name_entry.insert(END, chosen_diet)
@@ -161,7 +167,7 @@ class DietsTab():
 
         if not is_edit:
             ttk.Button(done_new_diet_frame, text="Add new diet", command=lambda: add_diet.add_new_diet(self, error_label
-                                                                                                      )).grid(row=1, column=1, pady=5, sticky="s")
+                                                                                                       )).grid(row=1, column=1, pady=5, sticky="s")
         else:
             ttk.Button(done_new_diet_frame, text="Done", command=lambda: self.back_to_diets(
                 new_diet_frame, False)).grid(row=1, column=1, pady=5, sticky="s")
@@ -171,7 +177,7 @@ class DietsTab():
         Args:
             vitamin_frame - parent of the optimal value frame
         """
-        optimal_values_frame = ttk.Frame(vitamin_frame, width=150, height=200)
+        optimal_values_frame = ttk.Frame(vitamin_frame)
         optimal_values_frame.grid(row=0, column=6, sticky='w')
         ttk.Label(optimal_values_frame, text="Optimal value").grid(
             row=1, column=6, pady=5)
@@ -200,11 +206,10 @@ class DietsTab():
             is_edit - True if we on edit mode
             chosen_diet - the current diet (passed only if is_edit=True)
         """
-        percentage_frame = ttk.Frame(vitamin_frame, width=270, height=850)
+        percentage_frame = ttk.Frame(vitamin_frame)
         percentage_frame.grid(row=0, column=5)
         ttk.Label(percentage_frame, text="progress bar").grid(
             row=0, column=5, padx=50, pady=16)
-        percentage_frame.grid_propagate(False)
 
         row_count = 1
         for vitamin in VitaminName.vitamin_name:
@@ -213,7 +218,7 @@ class DietsTab():
             setattr(self, vitamin+"_pbar", ttkbootstrap.Floodgauge(percentage_frame, length=100,
                                                                    style='secondary.Horizontal.TFloodgauge', maximum=optimal_quantity))
             setattr(self, vitamin+"pbar_label",
-                    ttk.Label(percentage_frame, foreground="#42f5b6"))
+                    ttk.Label(percentage_frame, foreground=GREEN_PERCENTAGE))
 
             getattr(self, vitamin+"_pbar").grid(row=row_count,
                                                 column=5, pady=7.4, ipady=1)
@@ -238,7 +243,7 @@ class DietsTab():
             chosen_diet - the current diet (not empty only if is_edit=True)
         """
 
-        current_meal_frame = ttk.Frame(meals_frame, width=400, height=200)
+        current_meal_frame = ttk.Frame(meals_frame)
         current_meal_frame.grid(row=grid_row_start, column=2, pady=7, padx=10)
 
         ttk.Label(current_meal_frame, text=meal).grid(
@@ -261,7 +266,6 @@ class DietsTab():
 
         current_meal_tableview = getattr(self, "tableview_"+meal)
         current_meal_tableview.grid(row=1+grid_row_start, column=2, sticky='e')
-        current_meal_frame.grid_propagate(False)
 
         if is_edit:  # in edit mode add all foods from chosen_diet to current_meal_listbox
             foods_in_diet_meal = self.current_user.get_foods_from_meal_diet(
@@ -294,15 +298,14 @@ class DietsTab():
                     ttk.Label(intake_frame, text=str(round(value, 2))+" "+VitaminName.units[vitamin]))
 
         getattr(self, vitamin+"_intake_label").grid(row=row_count,
-                                                         column=5, pady=6.49)
+                                                    column=5, pady=6.49)
 
     def create_all_diets_tab(self, all_diet_frame: ttk.Frame):
         """Create all the diets tab (diets listbox and all the button)
         Args:
             all_diet_frame - current frame
         """
-        diets_frame = ttk.Labelframe(
-            all_diet_frame, width=2000, height=900)
+        diets_frame = ttk.Labelframe(all_diet_frame)
         diets_frame.grid(row=0, column=0, padx=15, sticky='ns')
         ttk.Label(diets_frame, text="All your Diets").grid(
             row=1, column=1, pady=10, padx=30, sticky='ns')
@@ -319,8 +322,7 @@ class DietsTab():
             add_diet.add_diet_to_all_diets_list(self, diet_name)
             row += 1
 
-        buttons_diets_frame = ttk.Labelframe(
-            all_diet_frame, width=2000, height=200)
+        buttons_diets_frame = ttk.Labelframe(all_diet_frame)
         buttons_diets_frame.grid(row=0, column=2, padx=30)
 
         ttk.Button(buttons_diets_frame, text="Edit", command=lambda: self.edit_diet(

@@ -2,7 +2,8 @@ from __future__ import annotations
 import tkinter as tk
 import diets_tabs
 from vitamin_data.vitamin_names import VitaminName
-import consts
+from consts import GREEN_PERCENTAGE,Meals
+
 
 
 def reset_add_new_diet_frame(diet_tab: diets_tabs.DietsTab):
@@ -15,7 +16,7 @@ def reset_add_new_diet_frame(diet_tab: diets_tabs.DietsTab):
 
 def reset_vitamin_frame(diet_tab: diets_tabs.DietsTab):
     """Reset the vitamin frame after add new diet"""
-    color = "#42f5b6"
+    color = GREEN_PERCENTAGE
     for vitamin in VitaminName.vitamin_name:
         getattr(diet_tab, vitamin+"_intake_label")['text'] = '0'
         getattr(diet_tab, vitamin+"_pbar")['value'] = 0
@@ -25,7 +26,7 @@ def reset_vitamin_frame(diet_tab: diets_tabs.DietsTab):
 
 def reset_meals_frame(diet_tab: diets_tabs.DietsTab):
     """Reset the meal frame after we add new diet to empty values"""
-    for enum_meal in consts.Meals:
+    for enum_meal in Meals:
         meal=enum_meal.value
         getattr(diet_tab, "tableview_"+meal).delete_rows()
         setattr(diet_tab, meal+"_foods", None)
