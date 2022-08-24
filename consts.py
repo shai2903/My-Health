@@ -8,11 +8,16 @@ class SuperEnum(Enum):
         return list(map(lambda c: c.value, cls))
 
 
-class Meals(Enum):
+class Meals(SuperEnum):
     BREAKFAST = "breakfast"
     LUNCH = "lunch"
     DINNER = "dinner"
     SNACKS = "snacks"
+
+    def cap(self):
+        return self.value.capitalize()
+
+
 
 
 # Email
@@ -23,8 +28,8 @@ SENDER_MAIL = ""
 # Colors
 GREEN_PIE = '#5cb85c'
 BLUE_PIE = '#5bc0de'
-ORANGE_PIE = "f0ad4e"
-RED_PIE = "d9534f"
+ORANGE_PIE = "#f0ad4e"
+RED_PIE = "#d9534f"
 RED_PERCENTAGE = '#f55142'
 GREEN_PERCENTAGE = "#42f5b6"
 DARK_BLUE_STYLE = '#2B3E50'
