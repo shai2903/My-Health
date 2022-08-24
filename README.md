@@ -15,7 +15,7 @@ and add the key to key_from_USDA in consts.
 
 ## Usage 
 You should sign up or login:
- 
+![Alt text](images/welcome.png)
 Add food to your diet:
  
 After adding all the food ,enter diet name and click ‘Add new diet’
