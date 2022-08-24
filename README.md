@@ -12,3 +12,15 @@ in MongoDB create a new Database named Main_Database and a new collection named 
 4.	You should get API KEY from USDA : https://fdc.nal.usda.gov/api-key-signup.html
 and add the key to key_from_USDA in consts.
 5. Run the program in cmd : python ./start_app/py
+
+## Usage 
+You should sign up or login:
+ 
+Add food to your diet:
+ 
+After adding all the food ,enter diet name and click ‘Add new diet’
+In ‘Diet’ tab you have :
+  
+Edit – you can edit the chosen diet (add new food or delete food)
+Delete  - delete the chosen diet
+Analysis : 
