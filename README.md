@@ -10,21 +10,23 @@ in MongoDB create a new Database named Main_Database and a new collection named 
 2.	Install all the necessary libraries from the requirements.txt 
 3.	 In order to use the ‘Forgot Your Password’ feature add your mail data to SENDER_PASSWORD and SENDER_MAIL in consts.py 
 4.	You should get API KEY from USDA : https://fdc.nal.usda.gov/api-key-signup.html <br />
-and add the key to key_from_USDA in consts.
-5. Run the program in cmd : python ./start_app/py
+and add the key to key_from_USDA in consts.py
+5. Run the program in cmd : python ./start_app.py
 
 ## Usage 
 You should sign up or login in welcome page:<br /> 
 ![Alt text](images/welcome.png)<br /> <br /> 
 
 Add food to your diet:<br /> 
-![Alt text](images/add_food.png)<br /> <br />
+![Alt text](images/add_food.png)<br />
+after adding all the foods in your diet ,enter diet name and click ‘Add new diet’.<br /><br />
 
-After adding all foods ,enter diet name and click ‘Add new diet’
-In ‘Diet’ tab you have :<br /> 
-![Alt text](images/diets.png)<br /> <br />
+‘Diet’ tab:<br /> 
+![Alt text](images/diets.png)<br /> 
 
-Edit – you can edit the chosen diet (add new food or delete food)<br />
+<br /><br />
+You have 3 functions in this tab:
+Edit – you can edit the chosen diet (add new food or delete food similar to "Add new diet" tab)<br />
 Delete  - delete the chosen diet<br />
-Analysis : <br />
+Analysis -  View vitamin values for each vitamin: <br />
 ![Alt text](images/analysis.png)<br /> <br />
