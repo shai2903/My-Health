@@ -45,7 +45,12 @@ def get_list_of_foods_options(diet_tab: diets_tabs.DietsTab, food: str) -> list:
         food - the food we want to search
     return : list of food's description (string)
     """
-    foods_from_USDA = handler_USDA.get_all_options_USDA(food)
+    try:
+        foods_from_USDA = handler_USDA.get_all_options_USDA(food)
+    except USDAConnectionError:
+        messagebox.showerror("showerror", "USDA bad connection")
+        return
+
 
     list_of_description = []
     diet_tab.from_description_to_fcdif = {}
