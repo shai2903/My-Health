@@ -23,8 +23,7 @@ def search_user_collection(username: str, password: str) -> User:
     try:
         helper.verify_password(password, user_doc["password"])
     except UserPassValidationError as exc:
-        exc.str = ERROR_WRONG_PASS
-        raise exc
+        raise UserPassValidationError(ERROR_WRONG_PASS) from exc
 
     user = User(user_doc["user"], user_doc["mail"], user_doc["password"],
                 user_doc["gender"], user_doc["birthday"], user_doc["num_of_diets"])

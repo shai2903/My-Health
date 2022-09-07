@@ -4,6 +4,7 @@ import os
 from tkinter import FLAT
 from ttkbootstrap import Style
 import welcome_page
+import welcome_page
 import tab_creator
 from user import User
 

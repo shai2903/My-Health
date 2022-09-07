@@ -113,12 +113,14 @@ class WelcomePage(tk.Frame):
             username - the username the user enter
             password - the password the user enter
         """
+
         try:
             check_fields.check_empty_fields(username, password)
             self.user = handler_mongoDB.search_user_collection(
                 username, password)
 
         except UserPassValidationError as exception:
+
             self.label_error(self.login_frame, 5, 2, str(exception))
             return
 
