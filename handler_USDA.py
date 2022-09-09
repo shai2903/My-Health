@@ -12,7 +12,7 @@ def get_all_options_USDA(food_name: str) -> list:
            food_name - the food name we search
     """
 
-    json_result = requests.get(f'https://api.nal.usda.gov/fdc/v1/foods/search?api_key={key_from_USDA}&query={food_name}&dataType=SR Legacy', auth=HTTPBasicAuth('mars_test_343343', None))
+    json_result = requests.get(f'https://api.nal.usda.gov/fdc/v1/foods/search?api_key={key_from_USDA}&query={food_name}&dataType=SR Legacy', auth=HTTPBasicAuth(key_from_USDA, ''))
 
     try:
         res_foods=json_result.json()["foods"]
@@ -27,7 +27,7 @@ def get_serving_option(food_id: str) -> list:
            food_id - the food id we search
     """
     api_response = json.loads(requests.get(
-        f'https://api.nal.usda.gov/fdc/v1/food/{food_id}?api_key={key_from_USDA}', auth=HTTPBasicAuth('mars_test_343343', None)).text)
+        f'https://api.nal.usda.gov/fdc/v1/food/{food_id}?api_key={key_from_USDA}', auth=HTTPBasicAuth(key_from_USDA, '')).text)
     
     try:
         api_serving = api_response['foodPortions']
@@ -52,7 +52,7 @@ def get_food_nutrient(food_id: str) -> dict:
     """
     vitamins_nutrient = dict.fromkeys(VitaminName.vitamin_name, 0)
     api_response = json.loads(requests.get(
-        f'https://api.nal.usda.gov/fdc/v1/food/{food_id}?api_key={key_from_USDA}', auth=HTTPBasicAuth('mars_test_343343', None)).text)
+        f'https://api.nal.usda.gov/fdc/v1/food/{food_id}?api_key={key_from_USDA}', auth=HTTPBasicAuth(key_from_USDA, '')).text)
 
     try:
         api_nutrients = api_response['foodNutrients']
